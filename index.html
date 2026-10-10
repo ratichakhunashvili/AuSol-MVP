@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AuSol — ელექტრონული ნარჩენების გადამუშავება</title>
+<meta name="description" content="AuSol ქმნის უსაფრთხო, ეკოლოგიურ და სრულად გამჭვირვალე გზას ელექტრონული ნარჩენების შეგროვების, დახარისხებისა და ძვირფასი მეტალების აღდგენისთვის.">
+<meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ Tokens (from Figma) ============ */
+:root{
+  --olive:#2f321b;        /* dark sections */
+  --olive-ink:#2e311a;    /* dark text / borders */
+  --cream:#fafcd9;        /* header / page */
+  --cream-2:#f4f6d3;      /* light sections */
+  --bone:#f7f3e8;
+  --tile:#eef0ce;         /* icon tiles, badges */
+  --tile-2:#e8ebc8;
+  --bronze:#6b5b2d;       /* buttons */
+  --bronze-d:#524418;     /* icons, nav */
+  --gold:#ad8330;         /* calculator border */
+  --gold-text:#8a6a22;    /* gold text on white (AA) */
+  --gold-m:#c6ae73;
+  --gold-l:#fbe0a1;       /* highlights on dark */
+  --ink:#1a1d08;          /* headings */
+  --body:#4b463b;         /* body on light */
+  --body-d:#cec6b6;       /* body on dark */
+  --muted-d:#a39c8c;      /* muted on dark (AA) */
+  --white:#fff;
+
+  --font:"Noto Sans Georgian","Noto Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --wrap:1280px;
+  --pad:clamp(20px,4vw,48px);
+  --sec:clamp(56px,8vw,88px);
+  --hdr:80px;
+  color-scheme:light;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top:calc(var(--hdr) + 8px);
+  background:var(--cream);
+  padding-top:env(safe-area-inset-top,0px);
+  -webkit-text-size-adjust:100%;
+}
+body{
+  margin:0;background:var(--cream);color:var(--ink);
+  font-family:var(--font);font-size:15px;line-height:24px;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+}
+img,svg{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3,p{margin:0}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
+.on-dark :focus-visible,.footer :focus-visible{outline-color:var(--gold-l)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:var(--wrap);margin-inline:auto;padding-inline:var(--pad)}
+.ico{width:1em;height:1em;flex:none}
+
+/* ============ Header ============ */
+.header{
+  position:sticky;top:env(safe-area-inset-top,0px);z-index:50;
+  background:rgba(250,252,217,.9);
+  -webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);
+  box-shadow:0 1px 8px rgba(46,49,26,.06);
+}
+.header__bar{height:var(--hdr);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}
+.logo{display:block;width:132px;justify-self:start}
+.logo img{width:100%;height:auto}
+.nav{display:flex;gap:50px;align-items:center}
+.nav a{font-weight:700;font-size:14px;line-height:24px;color:var(--bronze-d);padding:4px 0;border-bottom:2px solid transparent;transition:border-color .15s}
+.nav a:hover{border-bottom-color:var(--gold)}
+.header__right{display:flex;align-items:center;gap:8px;justify-self:end}
+.lang{
+  height:38px;min-width:49px;padding:0 10px;border:0;border-radius:8px;
+  background:var(--bronze-d);color:var(--cream);font-weight:700;font-size:14px;
+  transition:background .15s;
+}
+.lang:hover{background:var(--olive-ink)}
+[aria-disabled="true"]{cursor:default}
+.langs button[aria-disabled="true"]:hover{color:var(--muted-d)}
+.burger{display:none;width:44px;height:44px;border:0;background:transparent;border-radius:8px;position:relative}
+.burger span,.burger span::before,.burger span::after{display:block;width:22px;height:2px;background:var(--bronze-d);border-radius:2px;position:absolute;left:11px;transition:transform .2s,opacity .2s,top .2s}
+.burger span{top:21px}
+.burger span::before{content:"";top:-7px;left:0}
+.burger span::after{content:"";top:7px;left:0}
+.burger[aria-expanded="true"] span{background:transparent}
+.burger[aria-expanded="true"] span::before{top:0;transform:rotate(45deg)}
+.burger[aria-expanded="true"] span::after{top:0;transform:rotate(-45deg)}
+.drawer{display:none}
+
+/* ============ Hero ============ */
+.hero{background:var(--olive);padding-block:clamp(48px,7vw,96px)}
+.hero__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:40px;align-items:center}
+.hero h1{
+  font-weight:400;color:var(--white);
+  font-size:clamp(28px,4.4vw,40px);line-height:1.375;letter-spacing:-.0275em;
+}
+.hero h1 em{display:block;font-style:normal;color:var(--gold-l)}
+.hero p{margin-top:20px;max-width:620px;font-size:16px;line-height:1.83;font-weight:300;color:var(--cream)}
+
+/* ============ Calculator ============ */
+.calc{
+  width:100%;max-width:475px;background:var(--white);
+  border:2px solid var(--gold);border-radius:14px;padding:20px;
+  display:flex;flex-direction:column;gap:20px;
+  box-shadow:0 0 10px rgba(173,131,48,.25),0 10px 25px -5px rgba(107,91,45,.15);
+  color:var(--olive-ink);
+}
+.calc__head{padding-bottom:10px;border-bottom:1px solid rgba(46,49,26,.1)}
+.calc__eyebrow{display:flex;align-items:center;gap:6px;font-size:11px;line-height:16px;font-weight:700;letter-spacing:.1em;color:var(--bronze)}
+.calc__eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--bronze)}
+.calc__title{font-size:14px;line-height:20px;font-weight:700;margin-top:2px}
+.calc__label{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:6px}
+.calc__label b{font-size:11px;line-height:16px;letter-spacing:.05em;font-weight:700}
+.calc__label span{font-size:10px;line-height:15px;color:#6f695c}
+.devices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;border:0;padding:0;margin:0;min-width:0}
+.dev{position:relative;display:block}
+.dev input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}
+.dev__card{
+  height:100%;min-height:69px;padding:8px 4px;border:1px solid rgba(46,49,26,.13);border-radius:8px;background:var(--white);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:2px;
+  transition:background .15s,border-color .15s,color .15s;color:var(--olive-ink);
+}
+.dev__card .ico{font-size:20px;margin-bottom:2px}
+.dev__name{font-size:10.5px;line-height:13px;font-weight:700}
+.dev__price{font-size:9.5px;line-height:13px;color:var(--gold-text);white-space:nowrap}
+.dev:hover .dev__card{border-color:var(--bronze)}
+.dev input:checked + .dev__card{background:var(--bronze);border-color:var(--bronze);color:var(--gold-m)}
+.dev input:checked + .dev__card .dev__name{color:var(--white)}
+.dev input:checked + .dev__card .dev__price{color:var(--gold-l)}
+.dev input:focus-visible + .dev__card{outline:2px solid var(--gold);outline-offset:2px}
+
+.weight{background:var(--bone);border:1px solid rgba(46,49,26,.1);border-radius:8px;padding:10px}
+.weight__row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px}
+.weight__row label{font-size:11px;line-height:16px;font-weight:700}
+.winput{display:flex;align-items:center;gap:4px;background:var(--white);border:1px solid rgba(46,49,26,.2);border-radius:4px;padding:2px 9px;min-width:76px;max-width:120px}
+.winput input{width:100%;min-width:34px;border:0;outline:0;background:transparent;font:700 12px/16px "Noto Sans","Noto Sans Georgian",sans-serif;text-align:right;color:var(--olive-ink);-moz-appearance:textfield;appearance:textfield}
+.winput input::-webkit-outer-spin-button,.winput input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.winput:focus-within{border-color:var(--gold);box-shadow:0 0 0 2px rgba(173,131,48,.25)}
+.winput span{font-size:11px;color:#6f695c}
+.presets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.presets button{
+  min-height:30px;border:1px solid rgba(46,49,26,.15);border-radius:4px;background:var(--white);
+  font-size:11px;font-weight:700;color:var(--olive-ink);transition:background .15s,color .15s,border-color .15s;
+}
+.presets button:hover{border-color:var(--bronze)}
+.presets button[aria-pressed="true"]{background:var(--bronze);border-color:var(--bronze);color:var(--white)}
+
+.result{border:1px solid rgba(173,131,48,.4);border-radius:8px;overflow:hidden}
+.result__top{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--bone);padding:6px 12px;font-size:10.5px;line-height:15px}
+.result__top span{color:var(--body)}
+.result__top b{font-size:10px;letter-spacing:.05em;color:var(--bronze);white-space:nowrap}
+.result__bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 8px;padding:8px 12px;min-height:44px;background:var(--white)}
+.result__bottom span{font-size:11px;color:var(--body)}
+.result__sum{font:700 clamp(15px,3.6vw,19px)/26px "Noto Sans","Noto Sans Georgian",sans-serif;color:var(--olive-ink);letter-spacing:-.01em;white-space:nowrap}
+.result__sum small{font-size:14px;color:var(--gold-text);margin-left:2px}
+
+.cta{
+  display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:44px;padding:10px 12px;
+  border:0;border-radius:8px;background:var(--bronze);color:var(--bone);font-size:12px;line-height:16px;font-weight:700;
+  box-shadow:0 1px 3px rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);transition:background .15s,transform .15s;
+}
+.cta:hover{background:var(--bronze-d)}
+.cta:active{transform:translateY(1px)}
+.cta .ico{font-size:14px}
+
+/* ============ Sections ============ */
+.section{padding-block:var(--sec)}
+.section--light{background:var(--cream-2)}
+.section--dark{background:var(--olive);color:var(--white)}
+.sec-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:clamp(32px,4vw,48px)}
+.sec-head__text{max-width:672px}
+.h2{font-size:clamp(28px,3.6vw,40px);line-height:1.2;font-weight:700;letter-spacing:-.015em;color:var(--ink)}
+.lede{margin-top:12px;font-size:16px;line-height:28px;color:var(--body);max-width:542px}
+.section--dark .h2{color:var(--white)}
+.section--dark .lede{color:var(--body-d)}
+.tag{
+  display:inline-flex;align-items:center;gap:12px;background:var(--white);padding:12px 24px;
+  font-weight:700;font-size:13px;line-height:18px;letter-spacing:.04em;color:var(--ink);
+  box-shadow:0 1px 2px rgba(0,0,0,.05);
+}
+.tag .ico{font-size:22px;color:var(--bronze-d)}
+
+/* Services */
+.services{display:grid;grid-template-columns:minmax(0,1fr);gap:24px}
+.card{background:var(--white);box-shadow:0 1px 2px rgba(0,0,0,.05);padding:32px}
+.svc{display:flex;gap:24px;align-items:flex-start}
+.tile{flex:none;width:56px;height:56px;display:grid;place-items:center;background:var(--tile);color:var(--bronze-d)}
+.svc__body{min-width:0;flex:1}
+.svc__title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.card h3{font-size:18px;line-height:26px;font-weight:600;color:var(--ink)}
+.chip{display:inline-block;flex:none;margin-top:3px;padding:2px 8px;border-radius:4px;background:var(--tile);color:var(--bronze-d);font-size:12px;line-height:16px;letter-spacing:.05em;white-space:nowrap}
+.svc p,.benefit p{margin-top:8px;font-size:15px;line-height:24px;color:var(--body)}
+.svc--wide{background:var(--olive);box-shadow:none}
+.svc--wide .tile{background:rgba(227,229,195,.15);color:var(--gold-l)}
+.svc--wide h3{color:var(--white)}
+.svc--wide p{color:var(--body-d);font-size:14px}
+.svc--wide .chip{background:rgba(227,229,195,.2);color:#f1f3d1;font-size:11px;letter-spacing:.06em}
+
+/* Process */
+.steps{display:grid;grid-template-columns:minmax(0,1fr);gap:24px;margin:0;padding:0;list-style:none}
+.step{background:rgba(227,229,195,.05);border-top:2px solid var(--gold-l);padding:32px}
+.step__n{font:700 28px/36px "Noto Sans","Noto Sans Georgian",sans-serif;letter-spacing:-.01em;color:var(--gold-l)}
+.step h3{margin-top:16px;font-size:18px;line-height:26px;font-weight:600;color:var(--white)}
+.step p{margin-top:16px;font-size:15px;line-height:24px;color:var(--body-d)}
+
+/* Partnership */
+.benefits{display:grid;grid-template-columns:minmax(0,1fr);gap:24px}
+.benefit .tile{width:40px;height:40px;margin-bottom:24px}
+.benefit h3{margin-bottom:0}
+.benefit p{margin-top:16px}
+
+/* ============ Footer ============ */
+.footer{background:var(--olive);color:var(--body-d);padding:64px 0 calc(32px + env(safe-area-inset-bottom,0px))}
+.footer__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:40px}
+.footer__brand b{display:block;font:700 18px/26px "Noto Sans","Noto Sans Georgian",sans-serif;letter-spacing:-.025em;color:var(--white)}
+.footer__brand p{margin-top:16px;max-width:448px;font-size:15px;line-height:24px}
+.footer ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.footer ul a,.contact a{font-size:13px;line-height:20px;transition:color .15s}
+.footer ul a:hover,.contact a:hover,.legal a:hover{color:var(--white)}
+.contact{display:grid;gap:4px;font-size:13px;line-height:20px}
+.contact a{font-size:14px}
+.contact small{font-size:12px;line-height:16px;margin-top:2px}
+.langs{margin-top:20px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.08em}
+.langs button{background:none;border:0;padding:6px 0;color:var(--muted-d);font-weight:700;letter-spacing:inherit}
+.langs button[aria-current="true"]{color:var(--cream)}
+.langs button:hover{color:var(--white)}
+.langs i{font-style:normal;color:var(--muted-d)}
+.legal{margin-top:48px;padding-top:24px;border-top:1px solid rgba(227,229,195,.1);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;font-size:13px;line-height:20px;color:var(--muted-d)}
+.legal nav{display:flex;flex-wrap:wrap;gap:8px 24px}
+
+/* ============ Breakpoints ============ */
+@media (min-width:640px){
+  .benefits{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .footer__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .footer__brand{grid-column:1/-1}
+}
+@media (min-width:768px){
+  .services{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .svc--wide{grid-column:1/-1}
+}
+@media (min-width:1024px){
+  .hero__grid{grid-template-columns:minmax(0,1fr) 475px;gap:64px}
+  .calc{min-height:500px;justify-content:space-between;justify-self:end}
+  .steps{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .benefits{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .footer__grid{grid-template-columns:minmax(0,470px) minmax(0,266px) minmax(0,368px);justify-content:space-between}
+  .footer__brand{grid-column:auto}
+}
+@media (max-width:1023.98px){
+  .calc{max-width:560px}
+}
+@media (max-width:899.98px){
+  :root{--hdr:64px}
+  .header__bar{grid-template-columns:auto 1fr}
+  .logo{width:104px}
+  .nav{display:none}
+  .burger{display:block}
+  .drawer{
+    display:block;position:absolute;left:0;right:0;top:100%;background:var(--cream);
+    border-top:1px solid rgba(46,49,26,.1);box-shadow:0 12px 24px -8px rgba(46,49,26,.2);
+    visibility:hidden;opacity:0;transform:translateY(-6px);transition:opacity .18s,transform .18s,visibility .18s;
+  }
+  .drawer.is-open{visibility:visible;opacity:1;transform:none}
+  .drawer a{display:block;padding:16px var(--pad);font-weight:700;font-size:16px;color:var(--bronze-d);border-bottom:1px solid rgba(46,49,26,.08)}
+  .drawer a:active,.drawer a:hover{background:var(--tile)}
+}
+@media (max-width:479.98px){
+  .card{padding:24px}
+  .svc{flex-direction:column;gap:16px}
+  .step{padding:24px}
+  .devices{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .presets{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .presets button{min-height:40px}
+  .dev__card{min-height:64px}
+  .calc{padding:16px}
+  .cta{font-size:13px}
+  .result__top{flex-wrap:wrap}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ Icon sprite (exported from Figma) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-badge" viewBox="0 0 22 21"><path fill="currentColor" d="M7.6 21L5.7 17.8L2.1 17L2.45 13.3L0 10.5L2.45 7.7L2.1 4L5.7 3.2L7.6 0L11 1.45L14.4 0L16.3 3.2L19.9 4L19.55 7.7L22 10.5L19.55 13.3L19.9 17L16.3 17.8L14.4 21L11 19.55L7.6 21ZM8.45 18.45L11 17.35L13.6 18.45L15 16.05L17.75 15.4L17.5 12.6L19.35 10.5L17.5 8.35L17.75 5.55L15 4.95L13.55 2.55L11 3.65L8.4 2.55L7 4.95L4.25 5.55L4.5 8.35L2.65 10.5L4.5 12.6L4.25 15.45L7 16.05L8.45 18.45ZM9.95 14.05L15.6 8.4L14.2 6.95L9.95 11.2L7.8 9.1L6.4 10.5L9.95 14.05Z"/></symbol>
+  <symbol id="i-s1" viewBox="0 0 27 27"><path fill="currentColor" d="M4 26.6667C3.26667 26.6667 2.63889 26.4056 2.11667 25.8833C1.59444 25.3611 1.33333 24.7333 1.33333 24V8.96667C0.933333 8.72222 0.611111 8.40556 0.366667 8.01667C0.122222 7.62778 0 7.17778 0 6.66667V2.66667C0 1.93333 0.261111 1.30556 0.783333 0.783333C1.30556 0.261111 1.93333 0 2.66667 0H24C24.7333 0 25.3611 0.261111 25.8833 0.783333C26.4056 1.30556 26.6667 1.93333 26.6667 2.66667V6.66667C26.6667 7.17778 26.5444 7.62778 26.3 8.01667C26.0556 8.40556 25.7333 8.72222 25.3333 8.96667V24C25.3333 24.7333 25.0722 25.3611 24.55 25.8833C24.0278 26.4056 23.4 26.6667 22.6667 26.6667H4ZM4 9.33333V24H22.6667V9.33333H4ZM2.66667 6.66667H24V2.66667H2.66667V6.66667ZM9.33333 16H17.3333V13.3333H9.33333V16Z"/></symbol>
+  <symbol id="i-s2" viewBox="0 0 24 26"><path fill="currentColor" d="M6 4C5.44444 4 4.97222 4.19444 4.58333 4.58333C4.19444 4.97222 4 5.44444 4 6C4 6.55556 4.19444 7.02778 4.58333 7.41667C4.97222 7.80556 5.44444 8 6 8C6.55556 8 7.02778 7.80556 7.41667 7.41667C7.80556 7.02778 8 6.55556 8 6C8 5.44444 7.80556 4.97222 7.41667 4.58333C7.02778 4.19444 6.55556 4 6 4ZM6 17.3333C5.44444 17.3333 4.97222 17.5278 4.58333 17.9167C4.19444 18.3056 4 18.7778 4 19.3333C4 19.8889 4.19444 20.3611 4.58333 20.75C4.97222 21.1389 5.44444 21.3333 6 21.3333C6.55556 21.3333 7.02778 21.1389 7.41667 20.75C7.80556 20.3611 8 19.8889 8 19.3333C8 18.7778 7.80556 18.3056 7.41667 17.9167C7.02778 17.5278 6.55556 17.3333 6 17.3333ZM1.33333 0H22.6667C23.0444 0 23.3611 0.127778 23.6167 0.383333C23.8722 0.638889 24 0.955556 24 1.33333V10.6667C24 11.0444 23.8722 11.3611 23.6167 11.6167C23.3611 11.8722 23.0444 12 22.6667 12H1.33333C0.955556 12 0.638889 11.8722 0.383333 11.6167C0.127778 11.3611 0 11.0444 0 10.6667V1.33333C0 0.955556 0.127778 0.638889 0.383333 0.383333C0.638889 0.127778 0.955556 0 1.33333 0ZM2.66667 2.66667V9.33333H21.3333V2.66667H2.66667ZM1.33333 13.3333H22.6667C23.0444 13.3333 23.3611 13.4611 23.6167 13.7167C23.8722 13.9722 24 14.2889 24 14.6667V24C24 24.3778 23.8722 24.6944 23.6167 24.95C23.3611 25.2056 23.0444 25.3333 22.6667 25.3333H1.33333C0.955556 25.3333 0.638889 25.2056 0.383333 24.95C0.127778 24.6944 0 24.3778 0 24V14.6667C0 14.2889 0.127778 13.9722 0.383333 13.7167C0.638889 13.4611 0.955556 13.3333 1.33333 13.3333ZM2.66667 16V22.6667H21.3333V16H2.66667ZM2.66667 2.66667V9.33333V2.66667ZM2.66667 16V22.6667V16Z"/></symbol>
+  <symbol id="i-s3" viewBox="0 0 25 25"><path fill="currentColor" d="M1.33333 24.6745V20.6745H5.46667L2.06667 9.54118C1.46667 9.20784 0.972222 8.71895 0.583333 8.07451C0.194444 7.43007 0 6.74118 0 6.00784C0 4.89673 0.388889 3.95229 1.16667 3.17451C1.94444 2.39673 2.88889 2.00784 4 2.00784C4.86667 2.00784 5.63889 2.25784 6.31667 2.75784C6.99444 3.25784 7.46667 3.89673 7.73333 4.67451H12V3.34118C12 2.9634 12.1278 2.64673 12.3833 2.39118C12.6389 2.13562 12.9556 2.00784 13.3333 2.00784C13.5333 2.00784 13.7278 2.05229 13.9167 2.14118C14.1056 2.23007 14.2667 2.3634 14.4 2.54118L16.6667 0.407843C16.8667 0.207843 17.1056 0.0800654 17.3833 0.0245098C17.6611 -0.0310458 17.9333 0.00784314 18.2 0.141176L23.4 2.54118C23.6667 2.67451 23.85 2.86895 23.95 3.12451C24.05 3.38007 24.0444 3.63007 23.9333 3.87451C23.8 4.14118 23.6056 4.3134 23.35 4.39118C23.0944 4.46895 22.8444 4.45229 22.6 4.34118L17.8 2.14118L14.6667 5.07451V6.94118L17.8 9.80784L22.6 7.60784C22.8444 7.49673 23.1 7.48562 23.3667 7.57451C23.6333 7.6634 23.8222 7.83007 23.9333 8.07451C24.0667 8.34118 24.0778 8.59673 23.9667 8.84118C23.8556 9.08562 23.6667 9.27451 23.4 9.40784L18.2 11.8745C17.9333 12.0078 17.6611 12.0467 17.3833 11.9912C17.1056 11.9356 16.8667 11.8078 16.6667 11.6078L14.4 9.47451C14.2667 9.60784 14.1056 9.73007 13.9167 9.84118C13.7278 9.95229 13.5333 10.0078 13.3333 10.0078C12.9556 10.0078 12.6389 9.88006 12.3833 9.62451C12.1278 9.36895 12 9.05229 12 8.67451V7.34118H7.73333C7.66667 7.51895 7.59444 7.68562 7.51667 7.84118C7.43889 7.99673 7.33333 8.1634 7.2 8.34118L13.8667 20.6745H18.6667V24.6745H1.33333ZM4 7.34118C4.37778 7.34118 4.69444 7.2134 4.95 6.95784C5.20556 6.70229 5.33333 6.38562 5.33333 6.00784C5.33333 5.63007 5.20556 5.3134 4.95 5.05784C4.69444 4.80229 4.37778 4.67451 4 4.67451C3.62222 4.67451 3.30556 4.80229 3.05 5.05784C2.79444 5.3134 2.66667 5.63007 2.66667 6.00784C2.66667 6.38562 2.79444 6.70229 3.05 6.95784C3.30556 7.2134 3.62222 7.34118 4 7.34118ZM8.2 20.6745H10.8L5.06667 10.0078C5.06667 10.0078 5.04444 10.0078 5 10.0078C4.95556 10.0078 4.93333 10.0078 4.93333 10.0078L8.2 20.6745Z"/></symbol>
+  <symbol id="i-s4" viewBox="0 0 22 27"><path fill="currentColor" d="M10.6667 26.6667C7.57778 25.8889 5.02778 24.1167 3.01667 21.35C1.00556 18.5833 0 15.5111 0 12.1333V4L10.6667 0L21.3333 4V12.1333C21.3333 15.5111 20.3278 18.5833 18.3167 21.35C16.3056 24.1167 13.7556 25.8889 10.6667 26.6667ZM10.6667 23.8667C12.8222 23.2 14.6222 21.8833 16.0667 19.9167C17.5111 17.95 18.3556 15.7556 18.6 13.3333H10.6667V2.83333L2.66667 5.83333V12.1333C2.66667 12.3778 2.66667 12.5778 2.66667 12.7333C2.66667 12.8889 2.68889 13.0889 2.73333 13.3333H10.6667V23.8667Z"/></symbol>
+  <symbol id="i-s5" viewBox="0 0 30 22"><path fill="currentColor" d="M6.66667 21.3333C5.55556 21.3333 4.61111 20.9444 3.83333 20.1667C3.05556 19.3889 2.66667 18.4444 2.66667 17.3333H0V2.66667C0 1.93333 0.261111 1.30556 0.783333 0.783333C1.30556 0.261111 1.93333 0 2.66667 0H21.3333V5.33333H25.3333L29.3333 10.6667V17.3333H26.6667C26.6667 18.4444 26.2778 19.3889 25.5 20.1667C24.7222 20.9444 23.7778 21.3333 22.6667 21.3333C21.5556 21.3333 20.6111 20.9444 19.8333 20.1667C19.0556 19.3889 18.6667 18.4444 18.6667 17.3333H10.6667C10.6667 18.4444 10.2778 19.3889 9.5 20.1667C8.72222 20.9444 7.77778 21.3333 6.66667 21.3333ZM6.66667 18.6667C7.04444 18.6667 7.36111 18.5389 7.61667 18.2833C7.87222 18.0278 8 17.7111 8 17.3333C8 16.9556 7.87222 16.6389 7.61667 16.3833C7.36111 16.1278 7.04444 16 6.66667 16C6.28889 16 5.97222 16.1278 5.71667 16.3833C5.46111 16.6389 5.33333 16.9556 5.33333 17.3333C5.33333 17.7111 5.46111 18.0278 5.71667 18.2833C5.97222 18.5389 6.28889 18.6667 6.66667 18.6667ZM2.66667 14.6667H3.73333C4.11111 14.2667 4.54444 13.9444 5.03333 13.7C5.52222 13.4556 6.06667 13.3333 6.66667 13.3333C7.26667 13.3333 7.81111 13.4556 8.3 13.7C8.78889 13.9444 9.22222 14.2667 9.6 14.6667H18.6667V2.66667H2.66667V14.6667ZM22.6667 18.6667C23.0444 18.6667 23.3611 18.5389 23.6167 18.2833C23.8722 18.0278 24 17.7111 24 17.3333C24 16.9556 23.8722 16.6389 23.6167 16.3833C23.3611 16.1278 23.0444 16 22.6667 16C22.2889 16 21.9722 16.1278 21.7167 16.3833C21.4611 16.6389 21.3333 16.9556 21.3333 17.3333C21.3333 17.7111 21.4611 18.0278 21.7167 18.2833C21.9722 18.5389 22.2889 18.6667 22.6667 18.6667ZM21.3333 12H27L24 8H21.3333V12Z"/></symbol>
+  <symbol id="i-s6" viewBox="0 0 27 24"><path fill="currentColor" d="M13.3333 24L0 8L4 0H22.6667L26.6667 8L13.3333 24ZM10.1667 6.66667H16.5L14.5 2.66667H12.1667L10.1667 6.66667ZM12 18.2333V9.33333H4.6L12 18.2333ZM14.6667 18.2333L22.0667 9.33333H14.6667V18.2333ZM19.4667 6.66667H23L21 2.66667H17.4667L19.4667 6.66667ZM3.66667 6.66667H7.2L9.2 2.66667H5.66667L3.66667 6.66667Z"/></symbol>
+  <symbol id="i-s7" viewBox="0 0 24 27"><path fill="currentColor" d="M10.1333 20.0667L19.5333 10.6667L17.6667 8.8L10.1333 16.3333L6.33333 12.5333L4.46667 14.4L10.1333 20.0667ZM2.66667 26.6667C1.93333 26.6667 1.30556 26.4056 0.783333 25.8833C0.261111 25.3611 0 24.7333 0 24V5.33333C0 4.6 0.261111 3.97222 0.783333 3.45C1.30556 2.92778 1.93333 2.66667 2.66667 2.66667H8.26667C8.55556 1.86667 9.03889 1.22222 9.71667 0.733333C10.3944 0.244444 11.1556 0 12 0C12.8444 0 13.6056 0.244444 14.2833 0.733333C14.9611 1.22222 15.4444 1.86667 15.7333 2.66667H21.3333C22.0667 2.66667 22.6944 2.92778 23.2167 3.45C23.7389 3.97222 24 4.6 24 5.33333V24C24 24.7333 23.7389 25.3611 23.2167 25.8833C22.6944 26.4056 22.0667 26.6667 21.3333 26.6667H2.66667ZM2.66667 24H21.3333V5.33333H2.66667V24ZM12 4.33333C12.2889 4.33333 12.5278 4.23889 12.7167 4.05C12.9056 3.86111 13 3.62222 13 3.33333C13 3.04444 12.9056 2.80556 12.7167 2.61667C12.5278 2.42778 12.2889 2.33333 12 2.33333C11.7111 2.33333 11.4722 2.42778 11.2833 2.61667C11.0944 2.80556 11 3.04444 11 3.33333C11 3.62222 11.0944 3.86111 11.2833 4.05C11.4722 4.23889 11.7111 4.33333 12 4.33333ZM2.66667 24V5.33333V24Z"/></symbol>
+  <symbol id="i-p1" viewBox="0 0 23 20"><path fill="currentColor" d="M10.885 18C10.9517 18 11.0183 17.9833 11.085 17.95C11.1517 17.9167 11.2017 17.8833 11.235 17.85L19.435 9.65C19.635 9.45 19.7808 9.225 19.8725 8.975C19.9642 8.725 20.01 8.475 20.01 8.225C20.01 7.95833 19.9642 7.70417 19.8725 7.4625C19.7808 7.22083 19.635 7.00833 19.435 6.825L15.185 2.575C15.0017 2.375 14.7892 2.22917 14.5475 2.1375C14.3058 2.04583 14.0517 2 13.785 2C13.535 2 13.285 2.04583 13.035 2.1375C12.785 2.22917 12.56 2.375 12.36 2.575L12.085 2.85L13.935 4.725C14.185 4.95833 14.3683 5.225 14.485 5.525C14.6017 5.825 14.66 6.14167 14.66 6.475C14.66 7.175 14.4225 7.7625 13.9475 8.2375C13.4725 8.7125 12.885 8.95 12.185 8.95C11.8517 8.95 11.5308 8.89167 11.2225 8.775C10.9142 8.65833 10.6433 8.48333 10.41 8.25L8.535 6.4L4.16 10.775C4.11 10.825 4.0725 10.8792 4.0475 10.9375C4.0225 10.9958 4.01 11.0583 4.01 11.125C4.01 11.2583 4.06 11.3792 4.16 11.4875C4.26 11.5958 4.37667 11.65 4.51 11.65C4.57667 11.65 4.64333 11.6333 4.71 11.6C4.77667 11.5667 4.82667 11.5333 4.86 11.5L8.26 8.1L9.66 9.5L6.285 12.9C6.235 12.95 6.1975 13.0042 6.1725 13.0625C6.1475 13.1208 6.135 13.1833 6.135 13.25C6.135 13.3833 6.185 13.5 6.285 13.6C6.385 13.7 6.50167 13.75 6.635 13.75C6.70167 13.75 6.76833 13.7333 6.835 13.7C6.90167 13.6667 6.95167 13.6333 6.985 13.6L10.385 10.225L11.785 11.625L8.41 15.025C8.36 15.0583 8.3225 15.1083 8.2975 15.175C8.2725 15.2417 8.26 15.3083 8.26 15.375C8.26 15.5083 8.31 15.625 8.41 15.725C8.51 15.825 8.62667 15.875 8.76 15.875C8.82667 15.875 8.88917 15.8625 8.9475 15.8375C9.00583 15.8125 9.06 15.775 9.11 15.725L12.51 12.35L13.91 13.75L10.51 17.15C10.46 17.2 10.4225 17.2542 10.3975 17.3125C10.3725 17.3708 10.36 17.4333 10.36 17.5C10.36 17.6333 10.4142 17.75 10.5225 17.85C10.6308 17.95 10.7517 18 10.885 18ZM10.86 20C10.2433 20 9.6975 19.7958 9.2225 19.3875C8.7475 18.9792 8.46833 18.4667 8.385 17.85C7.81833 17.7667 7.34333 17.5333 6.96 17.15C6.57667 16.7667 6.34333 16.2917 6.26 15.725C5.69333 15.6417 5.2225 15.4042 4.8475 15.0125C4.4725 14.6208 4.24333 14.15 4.16 13.6C3.52667 13.5167 3.01 13.2417 2.61 12.775C2.21 12.3083 2.01 11.7583 2.01 11.125C2.01 10.7917 2.0725 10.4708 2.1975 10.1625C2.3225 9.85417 2.50167 9.58333 2.735 9.35L8.535 3.575L11.81 6.85C11.8433 6.9 11.8933 6.9375 11.96 6.9625C12.0267 6.9875 12.0933 7 12.16 7C12.31 7 12.435 6.95417 12.535 6.8625C12.635 6.77083 12.685 6.65 12.685 6.5C12.685 6.43333 12.6725 6.36667 12.6475 6.3C12.6225 6.23333 12.585 6.18333 12.535 6.15L8.96 2.575C8.77667 2.375 8.56417 2.22917 8.3225 2.1375C8.08083 2.04583 7.82667 2 7.56 2C7.31 2 7.06 2.04583 6.81 2.1375C6.56 2.22917 6.335 2.375 6.135 2.575L2.61 6.125C2.46 6.275 2.335 6.45 2.235 6.65C2.135 6.85 2.06833 7.05 2.035 7.25C2.00167 7.45 2.00167 7.65417 2.035 7.8625C2.06833 8.07083 2.135 8.26667 2.235 8.45L0.785 9.9C0.501667 9.51667 0.293333 9.09583 0.16 8.6375C0.0266667 8.17917 -0.0233333 7.71667 0.01 7.25C0.0433333 6.78333 0.16 6.32917 0.36 5.8875C0.56 5.44583 0.835 5.05 1.185 4.7L4.71 1.175C5.11 0.791667 5.55583 0.5 6.0475 0.3C6.53917 0.1 7.04333 0 7.56 0C8.07667 0 8.58083 0.1 9.0725 0.3C9.56417 0.5 10.0017 0.791667 10.385 1.175L10.66 1.45L10.935 1.175C11.335 0.791667 11.7808 0.5 12.2725 0.3C12.7642 0.1 13.2683 0 13.785 0C14.3017 0 14.8058 0.1 15.2975 0.3C15.7892 0.5 16.2267 0.791667 16.61 1.175L20.835 5.4C21.2183 5.78333 21.51 6.225 21.71 6.725C21.91 7.225 22.01 7.73333 22.01 8.25C22.01 8.76667 21.91 9.27083 21.71 9.7625C21.51 10.2542 21.2183 10.6917 20.835 11.075L12.635 19.25C12.4017 19.4833 12.1308 19.6667 11.8225 19.8C11.5142 19.9333 11.1933 20 10.86 20Z"/></symbol>
+  <symbol id="i-p2" viewBox="0 0 22 16"><path fill="currentColor" d="M5 16C4.16667 16 3.45833 15.7083 2.875 15.125C2.29167 14.5417 2 13.8333 2 13H0V2C0 1.45 0.195833 0.979167 0.5875 0.5875C0.979167 0.195833 1.45 0 2 0H16V4H19L22 8V13H20C20 13.8333 19.7083 14.5417 19.125 15.125C18.5417 15.7083 17.8333 16 17 16C16.1667 16 15.4583 15.7083 14.875 15.125C14.2917 14.5417 14 13.8333 14 13H8C8 13.8333 7.70833 14.5417 7.125 15.125C6.54167 15.7083 5.83333 16 5 16ZM5 14C5.28333 14 5.52083 13.9042 5.7125 13.7125C5.90417 13.5208 6 13.2833 6 13C6 12.7167 5.90417 12.4792 5.7125 12.2875C5.52083 12.0958 5.28333 12 5 12C4.71667 12 4.47917 12.0958 4.2875 12.2875C4.09583 12.4792 4 12.7167 4 13C4 13.2833 4.09583 13.5208 4.2875 13.7125C4.47917 13.9042 4.71667 14 5 14ZM2 11H2.8C3.08333 10.7 3.40833 10.4583 3.775 10.275C4.14167 10.0917 4.55 10 5 10C5.45 10 5.85833 10.0917 6.225 10.275C6.59167 10.4583 6.91667 10.7 7.2 11H14V2H2V11ZM17 14C17.2833 14 17.5208 13.9042 17.7125 13.7125C17.9042 13.5208 18 13.2833 18 13C18 12.7167 17.9042 12.4792 17.7125 12.2875C17.5208 12.0958 17.2833 12 17 12C16.7167 12 16.4792 12.0958 16.2875 12.2875C16.0958 12.4792 16 12.7167 16 13C16 13.2833 16.0958 13.5208 16.2875 13.7125C16.4792 13.9042 16.7167 14 17 14ZM16 9H20.25L18 6H16V9Z"/></symbol>
+  <symbol id="i-p3" viewBox="0 0 18 20"><path fill="currentColor" d="M3 20C2.16667 20 1.45833 19.7083 0.875 19.125C0.291667 18.5417 0 17.8333 0 17V14H3V0L4.5 1.5L6 0L7.5 1.5L9 0L10.5 1.5L12 0L13.5 1.5L15 0L16.5 1.5L18 0V17C18 17.8333 17.7083 18.5417 17.125 19.125C16.5417 19.7083 15.8333 20 15 20H3ZM15 18C15.2833 18 15.5208 17.9042 15.7125 17.7125C15.9042 17.5208 16 17.2833 16 17V3H5V14H14V17C14 17.2833 14.0958 17.5208 14.2875 17.7125C14.4792 17.9042 14.7167 18 15 18ZM6 7V5H12V7H6ZM6 10V8H12V10H6ZM14 7C13.7167 7 13.4792 6.90417 13.2875 6.7125C13.0958 6.52083 13 6.28333 13 6C13 5.71667 13.0958 5.47917 13.2875 5.2875C13.4792 5.09583 13.7167 5 14 5C14.2833 5 14.5208 5.09583 14.7125 5.2875C14.9042 5.47917 15 5.71667 15 6C15 6.28333 14.9042 6.52083 14.7125 6.7125C14.5208 6.90417 14.2833 7 14 7ZM14 10C13.7167 10 13.4792 9.90417 13.2875 9.7125C13.0958 9.52083 13 9.28333 13 9C13 8.71667 13.0958 8.47917 13.2875 8.2875C13.4792 8.09583 13.7167 8 14 8C14.2833 8 14.5208 8.09583 14.7125 8.2875C14.9042 8.47917 15 8.71667 15 9C15 9.28333 14.9042 9.52083 14.7125 9.7125C14.5208 9.90417 14.2833 10 14 10ZM3 18H12V16H2V17C2 17.2833 2.09583 17.5208 2.2875 17.7125C2.47917 17.9042 2.71667 18 3 18ZM2 18C2 18 2 17.9042 2 17.7125C2 17.5208 2 17.2833 2 17V16V18Z"/></symbol>
+  <symbol id="i-p4" viewBox="0 0 17 17"><path fill="currentColor" d="M2.4 14.5923C1.65 13.8423 1.0625 12.9756 0.6375 11.9923C0.2125 11.009 0 9.99231 0 8.94231C0 7.89231 0.2 6.85481 0.6 5.82981C1 4.80481 1.65 3.84231 2.55 2.94231C3.13333 2.35897 3.85417 1.85897 4.7125 1.44231C5.57083 1.02564 6.5875 0.696474 7.7625 0.454808C8.9375 0.213141 10.2792 0.0673077 11.7875 0.0173077C13.2958 -0.0326923 14.9833 0.025641 16.85 0.192308C16.9833 1.95897 17.025 3.58397 16.975 5.06731C16.925 6.55064 16.7875 7.88814 16.5625 9.07981C16.3375 10.2715 16.0208 11.3131 15.6125 12.2048C15.2042 13.0965 14.7 13.8423 14.1 14.4423C13.2167 15.3256 12.2792 15.9715 11.2875 16.3798C10.2958 16.7881 9.28333 16.9923 8.25 16.9923C7.16667 16.9923 6.10833 16.7798 5.075 16.3548C4.04167 15.9298 3.15 15.3423 2.4 14.5923ZM5.2 14.1923C5.68333 14.4756 6.17917 14.6798 6.6875 14.8048C7.19583 14.9298 7.71667 14.9923 8.25 14.9923C9.01667 14.9923 9.775 14.8381 10.525 14.5298C11.275 14.2215 11.9917 13.7256 12.675 13.0423C12.975 12.7423 13.2792 12.3215 13.5875 11.7798C13.8958 11.2381 14.1625 10.5298 14.3875 9.65481C14.6125 8.77981 14.7833 7.72147 14.9 6.47981C15.0167 5.23814 15.0333 3.75897 14.95 2.04231C14.1333 2.00897 13.2125 1.99647 12.1875 2.00481C11.1625 2.01314 10.1417 2.09231 9.125 2.24231C8.10833 2.39231 7.14167 2.63397 6.225 2.96731C5.30833 3.30064 4.55833 3.75897 3.975 4.34231C3.225 5.09231 2.70833 5.83397 2.425 6.56731C2.14167 7.30064 2 8.00897 2 8.69231C2 9.67564 2.1875 10.5381 2.5625 11.2798C2.9375 12.0215 3.26667 12.5423 3.55 12.8423C4.25 11.509 5.175 10.2298 6.325 9.00481C7.475 7.77981 8.81667 6.77564 10.35 5.99231C9.15 7.04231 8.10417 8.22981 7.2125 9.55481C6.32083 10.8798 5.65 12.4256 5.2 14.1923Z"/></symbol>
+  <symbol id="i-p5" viewBox="0 0 16 20"><path fill="currentColor" d="M6.95 13.55L12.6 7.9L11.175 6.475L6.95 10.7L4.85 8.6L3.425 10.025L6.95 13.55ZM8 20C5.68333 19.4167 3.77083 18.0875 2.2625 16.0125C0.754167 13.9375 0 11.6333 0 9.1V3L8 0L16 3V9.1C16 11.6333 15.2458 13.9375 13.7375 16.0125C12.2292 18.0875 10.3167 19.4167 8 20ZM8 17.9C9.73333 17.35 11.1667 16.25 12.3 14.6C13.4333 12.95 14 11.1167 14 9.1V4.375L8 2.125L2 4.375V9.1C2 11.1167 2.56667 12.95 3.7 14.6C4.83333 16.25 6.26667 17.35 8 17.9Z"/></symbol>
+  <symbol id="i-p6" viewBox="0 0 16 20"><path fill="currentColor" d="M8 11C7.01667 11 6.1875 10.6625 5.5125 9.9875C4.8375 9.3125 4.5 8.48333 4.5 7.5C4.5 6.51667 4.8375 5.6875 5.5125 5.0125C6.1875 4.3375 7.01667 4 8 4C8.98333 4 9.8125 4.3375 10.4875 5.0125C11.1625 5.6875 11.5 6.51667 11.5 7.5C11.5 8.48333 11.1625 9.3125 10.4875 9.9875C9.8125 10.6625 8.98333 11 8 11ZM8 9C8.43333 9 8.79167 8.85833 9.075 8.575C9.35833 8.29167 9.5 7.93333 9.5 7.5C9.5 7.06667 9.35833 6.70833 9.075 6.425C8.79167 6.14167 8.43333 6 8 6C7.56667 6 7.20833 6.14167 6.925 6.425C6.64167 6.70833 6.5 7.06667 6.5 7.5C6.5 7.93333 6.64167 8.29167 6.925 8.575C7.20833 8.85833 7.56667 9 8 9ZM8 20C5.68333 19.4167 3.77083 18.0875 2.2625 16.0125C0.754167 13.9375 0 11.6333 0 9.1V3L8 0L16 3V9.1C16 11.6333 15.2458 13.9375 13.7375 16.0125C12.2292 18.0875 10.3167 19.4167 8 20ZM8 2.125L2 4.375V9.1C2 10 2.125 10.875 2.375 11.725C2.625 12.575 2.96667 13.375 3.4 14.125C4.1 13.775 4.83333 13.5 5.6 13.3C6.36667 13.1 7.16667 13 8 13C8.83333 13 9.63333 13.1 10.4 13.3C11.1667 13.5 11.9 13.775 12.6 14.125C13.0333 13.375 13.375 12.575 13.625 11.725C13.875 10.875 14 10 14 9.1V4.375L8 2.125ZM8 15C7.4 15 6.81667 15.0667 6.25 15.2C5.68333 15.3333 5.14167 15.5167 4.625 15.75C5.10833 16.25 5.63333 16.6833 6.2 17.05C6.76667 17.4167 7.36667 17.7 8 17.9C8.63333 17.7 9.23333 17.4167 9.8 17.05C10.3667 16.6833 10.8917 16.25 11.375 15.75C10.8583 15.5167 10.3167 15.3333 9.75 15.2C9.18333 15.0667 8.6 15 8 15Z"/></symbol>
+  <!-- calculator device icons (stroke) -->
+  <symbol id="i-pcset" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.17 2.5h3.33a1.67 1.67 0 0 1 1.67 1.67v11.66a1.67 1.67 0 0 1-1.67 1.67H4.17a1.67 1.67 0 0 1-1.67-1.67V4.17A1.67 1.67 0 0 1 4.17 2.5"/><path d="M4.79 5.42h2.08M4.79 7.5h2.08M5.83 13.75h0.01"/><path d="M11.67 5.83h5.83a.83.83 0 0 1 .83.84v4.16a.83.83 0 0 1-.83.84h-5.83a.83.83 0 0 1-.84-.84V6.67a.83.83 0 0 1 .84-.84"/><path d="M14.58 11.67v2.5M12.92 14.17h3.33"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 3.33h15a1.25 1.25 0 0 1 1.25 1.25v8.34a1.25 1.25 0 0 1-1.25 1.25h-15a1.25 1.25 0 0 1-1.25-1.25V4.58A1.25 1.25 0 0 1 2.5 3.33"/><path d="M10 14.17v2.5M6.67 16.67h6.66"/></symbol>
+  <symbol id="i-crt" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.92 2.5h14.16a1.25 1.25 0 0 1 1.25 1.25v8.33a1.25 1.25 0 0 1-1.25 1.25H2.92a1.25 1.25 0 0 1-1.25-1.25V3.75A1.25 1.25 0 0 1 2.92 2.5"/><path d="M4.58 4.58h8.75v5.84H4.58V4.58"/><path d="M15.63 5h0.01M15.63 7.5h0.01"/><path d="M7.5 13.33v2.09h5v-2.09M5.83 17.5h8.34"/></symbol>
+  <symbol id="i-laptop" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4.17 4.17h11.66a.83.83 0 0 1 .84.83v7.5H3.33V5a.83.83 0 0 1 .84-.83"/><path d="M1.67 12.5h16.66v1.67a1.25 1.25 0 0 1-1.25 1.25H2.92a1.25 1.25 0 0 1-1.25-1.25V12.5"/></symbol>
+  <symbol id="i-server" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3.33 2.5h13.34a.83.83 0 0 1 .83.83v13.34a.83.83 0 0 1-.83.83H3.33a.83.83 0 0 1-.83-.83V3.33a.83.83 0 0 1 .83-.83"/><path d="M2.5 7.5h15M2.5 12.5h15"/><path d="M5 5h1.67M5 10h1.67M5 15h1.67"/><path d="M14.58 5h0.01M14.58 10h0.01M14.58 15h0.01"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.08333 1.66666H12.9167C14.0665 1.66666 15 2.60017 15 3.74999V16.25C15 17.3998 14.0665 18.3333 12.9167 18.3333H7.08333C5.93351 18.3333 5 17.3998 5 16.25V3.74999C5 2.60017 5.93351 1.66666 7.08333 1.66666"/><path d="M8.33325 15H11.6666"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.17"><path d="M2.91675 7.00002H11.0834M7.00008 2.91669L11.0834 7.00002L7.00008 11.0834"/></symbol>
+</svg>
+
+<!-- ============ Header ============ -->
+<header class="header">
+  <div class="wrap">
+    <div class="header__bar">
+      <a class="logo" href="#home" aria-label="AuSol — მთავარი">
+        <img src="data:image/png;base64,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" alt="AuSol" width="264" height="124" decoding="async">
+      </a>
+      <nav class="nav" aria-label="მთავარი ნავიგაცია">
+        <a href="#home">მთავარი</a>
+        <a href="#services">სერვისები</a>
+        <a href="#process">როგორ მუშაობს?</a>
+      </nav>
+      <div class="header__right">
+        <button class="lang" type="button" data-lang-toggle aria-disabled="true" title="ინგლისური ვერსია მალე დაემატება" aria-label="English version — coming soon">ENG</button>
+        <button class="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="მენიუს გახსნა"><span></span></button>
+      </div>
+    </div>
+  </div>
+  <div class="drawer" id="drawer">
+    <a href="#home">მთავარი</a>
+    <a href="#services">სერვისები</a>
+    <a href="#process">როგორ მუშაობს?</a>
+    <a href="#calculator">კალკულატორი</a>
+    <a href="#partnership">პარტნიორობა</a>
+  </div>
+</header>
+
+<main>
+<!-- ============ 1. Hero ============ -->
+<section class="hero on-dark" id="home" aria-labelledby="hero-title">
+  <div class="wrap">
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <h1 id="hero-title">ელექტრონულ ნარჩენს ვაქცევთ <em>ღირებულ რესურსად</em></h1>
+        <p>AuSol ქმნის უსაფრთხო, ეკოლოგიურ და სრულად გამჭვირვალე გზას ელექტრონული ნარჩენების შეგროვების, დახარისხებისა და სტრატეგიული ძვირფასი მეტალების აღდგენისთვის სამრეწველო მასშტაბით.</p>
+      </div>
+
+      <!-- Calculator -->
+      <section class="calc" id="calculator" aria-labelledby="calc-title">
+        <div class="calc__head">
+          <div class="calc__eyebrow"><i></i>AUSOL ᲨᲔᲤᲐᲡᲔᲑᲐ</div>
+          <h2 class="calc__title" id="calc-title">სწრაფი ონლაინ კალკულატორი</h2>
+        </div>
+
+        <fieldset class="devices-wrap" style="border:0;padding:0;margin:0;min-width:0">
+          <legend class="sr-only">აირჩიეთ ნარჩენი</legend>
+          <div class="calc__label" aria-hidden="true"><b>ᲐᲘᲠᲩᲘᲔᲗ ᲜᲐᲠᲩᲔᲜᲘ</b><span>1 კატეგორია</span></div>
+          <div class="devices" id="devices">
+            <label class="dev"><input type="radio" name="device" value="pc" checked><span class="dev__card"><svg class="ico"><use href="#i-pcset"/></svg><span class="dev__name">კომპიუტერი</span><span class="dev__price">22–25 ₾/კგ</span></span></label>
+            <label class="dev"><input type="radio" name="device" value="monitor"><span class="dev__card"><svg class="ico"><use href="#i-monitor"/></svg><span class="dev__name">მონიტორი</span><span class="dev__price">20–24 ₾/კგ</span></span></label>
+            <label class="dev"><input type="radio" name="device" value="crt"><span class="dev__card"><svg class="ico"><use href="#i-crt"/></svg><span class="dev__name">CRT მონიტორი</span><span class="dev__price">28–35 ₾/კგ</span></span></label>
+            <label class="dev"><input type="radio" name="device" value="laptop"><span class="dev__card"><svg class="ico"><use href="#i-laptop"/></svg><span class="dev__name">ლეპტოპი</span><span class="dev__price">35–40 ₾/კგ</span></span></label>
+            <label class="dev"><input type="radio" name="device" value="phone"><span class="dev__card"><svg class="ico"><use href="#i-phone"/></svg><span class="dev__name">მობილური</span><span class="dev__price">60–80 ₾/კგ</span></span></label>
+            <label class="dev"><input type="radio" name="device" value="server"><span class="dev__card"><svg class="ico"><use href="#i-server"/></svg><span class="dev__name">სერვერი</span><span class="dev__price">26–30 ₾/კგ</span></span></label>
+          </div>
+        </fieldset>
+
+        <div class="weight">
+          <div class="weight__row">
+            <label for="weight">წონის რაოდენობა:</label>
+            <div class="winput"><input id="weight" type="number" inputmode="decimal" min="0" max="100000" step="1" value="15"><span>კგ</span></div>
+          </div>
+          <div class="presets" id="presets" role="group" aria-label="წონის სწრაფი არჩევანი">
+            <button type="button" data-w="5" aria-pressed="false">5 კგ</button>
+            <button type="button" data-w="15" aria-pressed="true">15 კგ</button>
+            <button type="button" data-w="50" aria-pressed="false">50 კგ</button>
+            <button type="button" data-w="100" aria-pressed="false">100+ კგ</button>
+          </div>
+        </div>
+
+        <div class="result" aria-live="polite">
+          <div class="result__top"><span id="summary">სრული კომპიუტერული კომპლექტი • 15 კგ</span><b>ᲬᲘᲜᲐᲡᲬᲐᲠᲘ ᲨᲔᲤᲐᲡᲔᲑᲐ</b></div>
+          <div class="result__bottom"><span>თქვენი წმინდა შედეგი:</span><span class="result__sum"><span id="total">−276 – −82.5</span><small>₾</small></span></div>
+        </div>
+
+        <button class="cta" type="button" id="book">დაჯავშნე ადგილზე გატანა ან ჩაბარება <svg class="ico"><use href="#i-arrow"/></svg></button>
+      </section>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3. Services ============ -->
+<section class="section section--light" id="services" aria-labelledby="services-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-head__text">
+        <h2 class="h2" id="services-title">ჩვენი სერვისები</h2>
+        <p class="lede">ტექნიკური სიზუსტე შეგროვებიდან მეტალურგიულ გადამუშავებამდე. სრული ციკლი ერთი კომპანიის ფარგლებში.</p>
+      </div>
+      <div class="tag"><svg class="ico"><use href="#i-badge"/></svg>100% ეკოლოგიური ლიცენზია</div>
+    </div>
+
+    <div class="services">
+      <article class="card svc">
+        <div class="tile"><svg width="27" height="27" aria-hidden="true"><use href="#i-s1"/></svg></div>
+        <div class="svc__body">
+          <div class="svc__title"><h3>ელექტრონული ნარჩენების მიღება და შეგროვება</h3><span class="chip">S-01</span></div>
+          <p>ნებისმიერი კატეგორიის სამომხმარებლო და ინდუსტრიული ელექტრონიკის ცენტრალიზებული მიღება AuSol-ის ლოგისტიკურ ცენტრებში.</p>
+        </div>
+      </article>
+      <article class="card svc">
+        <div class="tile"><svg width="24" height="26" aria-hidden="true"><use href="#i-s2"/></svg></div>
+        <div class="svc__body">
+          <div class="svc__title"><h3>კომპიუტერებისა და სერვერების ჩაბარება</h3><span class="chip">S-02</span></div>
+          <p>დეაქტივირებული სერვერული კარადების, ქსელური კონცენტრატორებისა და სამუშაო სადგურების უსაფრთხო დემონტაჟი და ჩაბარება.</p>
+        </div>
+      </article>
+      <article class="card svc">
+        <div class="tile"><svg width="24" height="25" aria-hidden="true"><use href="#i-s3"/></svg></div>
+        <div class="svc__body">
+          <div class="svc__title"><h3>IT ტექნიკის კომპლექსური უტილიზაცია</h3><span class="chip">S-03</span></div>
+          <p>კომპლექსური გადამუშავება საერთაშორისო WEEE (Waste Electrical &amp; Electronic Equipment) დირექტივების სრული დაცვით.</p>
+        </div>
+      </article>
+      <article class="card svc">
+        <div class="tile"><svg width="21" height="27" aria-hidden="true"><use href="#i-s4"/></svg></div>
+        <div class="svc__body">
+          <div class="svc__title"><h3>მონაცემთა მატარებლების უსაფრთხო განადგურება</h3><span class="chip">S-04</span></div>
+          <p>HDD, SSD და Flash მატარებლების ფიზიკური დეინსტალაცია და დაქუცმაცება (Shredding) მონაცემთა სრული აღუდგენლობის გარანტიით.</p>
+        </div>
+      </article>
+      <article class="card svc">
+        <div class="tile"><svg width="29" height="21" aria-hidden="true"><use href="#i-s5"/></svg></div>
+        <div class="svc__body">
+          <div class="svc__title"><h3>ადგილზე გატანა და ტრანსპორტირება</h3><span class="chip">S-05</span></div>
+          <p>საკუთარი სპეცტრანსპორტით ნარჩენების შეუფერხებელი ლოგისტიკა მთელი საქართველოს მასშტაბით პირდაპირ თქვენი ობიექტიდან.</p>
+        </div>
+      </article>
+      <article class="card svc">
+        <div class="tile"><svg width="27" height="24" aria-hidden="true"><use href="#i-s6"/></svg></div>
+        <div class="svc__body">
+          <div class="svc__title"><h3>ძვირფასი რესურსების აღდგენა (Au, Cu, Ag)</h3><span class="chip">S-06</span></div>
+          <p>დაბეჭდილი მიკროსქემებიდან და პროცესორებიდან ოქროს, სპილენძის, პალადიუმისა და ვერცხლის მაღალი სისუფთავით სეპარაცია.</p>
+        </div>
+      </article>
+      <article class="card svc svc--wide">
+        <div class="tile"><svg width="24" height="27" aria-hidden="true"><use href="#i-s7"/></svg></div>
+        <div class="svc__body">
+          <div class="svc__title"><h3>ოფიციალური დოკუმენტაცია და ISO სერტიფიცირება</h3><span class="chip">COMPLIANCE</span></div>
+          <p>გადამუშავების ოფიციალური აქტები, გარემოსდაცვითი მოწმობები და საგადასახადო ჩამოწერის სრული პაკეტი, რომელიც აღიარებულია საქართველოს შემოსავლების სამსახურისა და გარემოსდაცვითი ზედამხედველობის მიერ.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. Process ============ -->
+<section class="section section--dark on-dark" id="process" aria-labelledby="process-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-head__text">
+        <h2 class="h2" id="process-title">როგორ მუშაობს AuSol</h2>
+        <p class="lede">4-ეტაპიანი გამჭვირვალე, უსაფრთხო და ლიცენზირებული ციკლი განაცხადის მიღებიდან სერტიფიკატის გაცემამდე.</p>
+      </div>
+    </div>
+    <ol class="steps">
+      <li class="step"><div class="step__n">01</div><h3>დაგვიკავშირდი</h3><p>შეავსეთ მარტივი ონლაინ განაცხადი ან დაუკავშირდით პირად მენეჯერს ტექნიკის წინასწარი ჩამონათვალის წარსადგენად.</p></li>
+      <li class="step"><div class="step__n">02</div><h3>ვაფასებთ ნარჩენს</h3><p>ექსპერტთა ჯგუფი აფასებს ნარჩენის მოცულობას, კატეგორიას, ელემენტარულ შემადგენლობასა და საბაზრო ღირებულებას.</p></li>
+      <li class="step"><div class="step__n">03</div><h3>ვახარისხებთ და ვამუშავებთ</h3><p>მექანიკური და ეკოლოგიური დაშლა AuSol-ის საწარმოში. ძვირფასი მეტალების სეპარაცია და ნარჩენების უსაფრთხო დეაქტივაცია.</p></li>
+      <li class="step"><div class="step__n">04</div><h3>გაძლევთ დოკუმენტაციას</h3><p>გადაგეცემათ ოფიციალური უტილიზაციის აქტი, განადგურების ვიდეო-ოქმი (საჭიროების შემთხვევაში) და ფინანსური ანგარიშსწორება.</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 6. Partnership ============ -->
+<section class="section section--light" id="partnership" aria-labelledby="partner-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-head__text">
+        <h2 class="h2" id="partner-title">გახდი AuSol-ის პარტნიორი</h2>
+        <p class="lede">ორგანიზაციებისთვის AuSol გთავაზობთ ელექტრონული ნარჩენების ორგანიზებულ მართვას, ადგილზე გატანასა და დოკუმენტირებულ უტილიზაციას.</p>
+      </div>
+    </div>
+    <div class="benefits">
+      <article class="card benefit"><div class="tile"><svg width="22" height="20" aria-hidden="true"><use href="#i-p1"/></svg></div><h3>მორგებული პირობები</h3><p>გრძელვადიანი ჩარჩო ხელშეკრულებები კორპორატიული ტარიფებით, მუდმივი მომსახურებისა და ინდივიდუალური გრაფიკების შეთავაზებით.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="22" height="16" aria-hidden="true"><use href="#i-p2"/></svg></div><h3>სპეციალური ლოგისტიკა</h3><p>სპეცტექნიკით აღჭურვილი ლოგისტიკური ბრიგადა, რომელიც ახორციელებს მძიმე სერვერებისა და საოფისე ტექნიკის უსაფრთხო დემონტაჟსა და გატანას.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="18" height="20" aria-hidden="true"><use href="#i-p3"/></svg></div><h3>ზუსტი ელექტრონული აღრიცხვა</h3><p>თითოეული პარტიის სრული დეტალიზაცია: სერიული ნომრები, წონითი მაჩვენებლები და გადამუშავების ციკლის სტატუსის მონიტორინგი.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="17" height="17" aria-hidden="true"><use href="#i-p4"/></svg></div><h3>ეკოლოგიური სისუფთავე</h3><p>ნულოვანი ემისია გარემოში ტოქსიკური ნივთიერებების (ტყვია, ვერცხლისწყალი, კადმიუმი) სწორი ნეიტრალიზაციითა და უსაფრთხო დეპონირებით.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="16" height="20" aria-hidden="true"><use href="#i-p5"/></svg></div><h3>ოფიციალური სერტიფიცირება</h3><p>საგადასახადო ბალანსიდან ჩამოწერის ოფიციალური დოკუმენტები, აუდიტისთვის მზა ეკოლოგიური პასპორტი და ISO 14001 შესაბამისობის აქტი.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="16" height="20" aria-hidden="true"><use href="#i-p6"/></svg></div><h3>მონაცემთა დაცვის გარანტია</h3><p>კომერციული და სახელმწიფო საიდუმლოების შემცველი ინფორმაციის მატარებლების დეაქტივაცია საერთაშორისო NIST SP 800-88 სტანდარტით.</p></article>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ Footer ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <b>AUSOL</b>
+        <p>მოწინავე ელექტრონული ნარჩენების გადამუშავება და ძვირფასი მეტალების აღდგენა საქართველოში. ტექნოლოგიური სიზუსტე და ეკოლოგიური პასუხისმგებლობა სამრეწველო მასშტაბით.</p>
+      </div>
+      <nav aria-label="ფუტერის ნავიგაცია">
+        <ul>
+          <li><a href="#home">მთავარი</a></li>
+          <li><a href="#services">ჩვენ შესახებ</a></li>
+          <li><a href="#services">სერვისები</a></li>
+          <li><a href="#process">როგორ მუშაობს</a></li>
+          <li><a href="#calculator">კალკულატორი</a></li>
+          <li><a href="#partnership">პარტნიორობა</a></li>
+        </ul>
+      </nav>
+      <div>
+        <div class="contact">
+          <span>თბილისი, საქართველო</span>
+          <a href="mailto:info@ausol.ge">info@ausol.ge</a>
+          <a href="tel:+995322000000">+995 32 200 00 00</a>
+          <small>სამუშაო საათები: ორშ-პარ 09:00 - 18:00</small>
+        </div>
+        <div class="langs" role="group" aria-label="ენა">
+          <button type="button" aria-current="true">ᲥᲐᲠᲗᲣᲚᲘ</button><i>/</i><button type="button" aria-disabled="true" title="ინგლისური ვერსია მალე დაემატება">ENGLISH</button>
+        </div>
+      </div>
+    </div>
+    <div class="legal">
+      <span>© 2025 AuSol. ყველა უფლება დაცულია.</span>
+      <nav aria-label="სამართლებრივი ბმულები">
+        <a href="#" data-soon title="გვერდი მალე დაემატება">კონფიდენციალურობის პოლიტიკა</a>
+        <a href="#" data-soon title="გვერდი მალე დაემატება">მომსახურების პირობები</a>
+        <a href="#" data-soon title="გვერდი მალე დაემატება">ეკოლოგიური სტანდარტები</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Mobile menu ---------- */
+  var burger = document.querySelector(".burger");
+  var drawer = document.getElementById("drawer");
+  function setMenu(open){
+    burger.setAttribute("aria-expanded", String(open));
+    burger.setAttribute("aria-label", open ? "მენიუს დახურვა" : "მენიუს გახსნა");
+    drawer.classList.toggle("is-open", open);
+  }
+  burger.addEventListener("click", function(){ setMenu(burger.getAttribute("aria-expanded") !== "true"); });
+  drawer.addEventListener("click", function(e){ if (e.target.closest("a")) setMenu(false); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") setMenu(false); });
+
+  // Guarded: older browsers lack matchMedia().addEventListener, and an unguarded
+  // call here would throw and take the rest of this script (the calculator) with it.
+  try {
+    var mq = window.matchMedia && window.matchMedia("(min-width:900px)");
+    var onWide = function(e){ if (e.matches) setMenu(false); };
+    if (mq && mq.addEventListener) mq.addEventListener("change", onWide);
+    else if (mq && mq.addListener) mq.addListener(onWide);
+  } catch (e) {}
+
+  /* ---------- Calculator ---------- */
+  // Source: client pricing sheet. Per category: service fee charged per kg (min–max)
+  // and recovered gold per tonne in grams (min–max).
+  var DEVICES = {
+    pc:      { label:"სრული კომპიუტერული კომპლექტი", priceMin:22, priceMax:25, goldMin:20,  goldMax:50  },
+    monitor: { label:"მონიტორები (LCD / LED)",        priceMin:20, priceMax:24, goldMin:5,   goldMax:15  },
+    crt:     { label:"CRT მონიტორები",                priceMin:28, priceMax:35, goldMin:2,   goldMax:8   },
+    laptop:  { label:"ლეპტოპები და პლანშეტები",       priceMin:35, priceMax:40, goldMin:100, goldMax:200 },
+    phone:   { label:"მობილურები / სმარტფონები",      priceMin:60, priceMax:80, goldMin:300, goldMax:500 },
+    server:  { label:"სერვერული აღჭურვილობა",         priceMin:26, priceMax:30, goldMin:150, goldMax:300 }
+  };
+  var GOLD_PRICE = 330;   // ₾ per gram — fixed; update here when the market moves
+  var MAX_KG = 100000;
+
+  /* The client's net result: recovered gold value minus the service fee.
+     Worst case pairs the lowest gold yield with the highest fee; best case the reverse.
+     Everything scales linearly from the sheet's per-tonne figures. */
+  function calculate(device, weightKg){
+    var goldValue = function(gramsPerTonne){
+      return gramsPerTonne / 1000 * weightKg * GOLD_PRICE;
+    };
+    return {
+      min: goldValue(device.goldMin) - device.priceMax * weightKg,
+      max: goldValue(device.goldMax) - device.priceMin * weightKg
+    };
+  }
+
+  var weightInput = document.getElementById("weight");
+  var presets = document.querySelectorAll("#presets button");
+  var summary = document.getElementById("summary");
+  var total = document.getElementById("total");
+
+  function fmt(n){ return n.toLocaleString("en-US", { maximumFractionDigits: 2 }); }
+  // Ranges can straddle zero, so every figure carries its sign explicitly.
+  function signed(n){
+    var r = Math.round(n * 100) / 100;
+    if (r === 0) return "0";
+    return (r > 0 ? "+" : "\u2212") + fmt(Math.abs(r));
+  }
+
+  // Single source of truth: the same clamped, rounded number feeds the summary and the maths,
+  // so the line the user reads always reconciles with the figure shown.
+  function clampWeight(value){
+    var n = parseFloat(value);
+    if (!isFinite(n) || n < 0) n = 0;
+    if (n > MAX_KG) n = MAX_KG;
+    return Math.round(n * 100) / 100;
+  }
+  function currentDevice(){
+    var checked = document.querySelector('input[name="device"]:checked');
+    return DEVICES[checked ? checked.value : "pc"];
+  }
+  function render(){
+    var device = currentDevice();
+    var w = clampWeight(weightInput.value);
+    var net = calculate(device, w);
+    summary.textContent = device.label + " • " + fmt(w) + " კგ";
+    total.textContent = w === 0 ? "0" : signed(net.min) + " – " + signed(net.max);
+    for (var i = 0; i < presets.length; i++){
+      presets[i].setAttribute("aria-pressed", String(Number(presets[i].dataset.w) === w));
+    }
+  }
+
+  document.getElementById("devices").addEventListener("change", render);
+  weightInput.addEventListener("input", function(){
+    // Correct the field only when it is genuinely out of range, so partial typing still works.
+    var n = parseFloat(weightInput.value);
+    if (isFinite(n) && (n < 0 || n > MAX_KG)) weightInput.value = String(clampWeight(n));
+    render();
+  });
+  weightInput.addEventListener("blur", function(){
+    weightInput.value = String(clampWeight(weightInput.value));
+    render();
+  });
+  for (var i = 0; i < presets.length; i++){
+    presets[i].addEventListener("click", function(){
+      weightInput.value = this.dataset.w;
+      render();
+    });
+  }
+  render();
+
+  /* ---------- Booking ---------- */
+  document.getElementById("book").addEventListener("click", function(){
+    var device = currentDevice(), w = clampWeight(weightInput.value), net = calculate(device, w);
+    var subject = "გატანის/ჩაბარების დაჯავშნა — " + device.label;
+    var body = "გამარჯობა,\n\nმსურს ადგილზე გატანის ან ჩაბარების დაჯავშნა.\n\n" +
+               "კატეგორია: " + device.label + "\n" +
+               "წონა: " + fmt(w) + " კგ\n" +
+               "სერვისის ტარიფი: " + device.priceMin + "–" + device.priceMax + " ₾/კგ\n" +
+               "წინასწარი წმინდა შედეგი: " + signed(net.min) + " – " + signed(net.max) + " ₾\n\n" +
+               "სახელი:\nმისამართი:\nსასურველი დრო:\nტელეფონი:\n";
+    window.location.href = "mailto:info@ausol.ge?subject=" + encodeURIComponent(subject) +
+                           "&body=" + encodeURIComponent(body);
+  });
+
+  /* ---------- Not-yet-available controls ---------- */
+  // These have no destination yet; swallow the click so href="#" cannot jump the page to the top.
+  document.addEventListener("click", function(e){
+    var el = e.target.closest('[data-soon], [aria-disabled="true"]');
+    if (el) e.preventDefault();
+  });
+})();
+</script>
+</body>
+</html>
