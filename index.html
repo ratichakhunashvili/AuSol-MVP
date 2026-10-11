@@ -74,15 +74,16 @@ h1,h2,h3{overflow-wrap:break-word}
 .header__bar{height:var(--hdr);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px}
 .logo{display:block;width:132px;justify-self:start}
 .logo img{width:100%;height:auto}
-.nav{display:flex;gap:50px;align-items:center}
-.nav a{font-weight:700;font-size:14px;line-height:24px;color:var(--bronze-d);padding:4px 0;border-bottom:2px solid transparent;transition:border-color .15s}
+.nav{display:flex;gap:clamp(18px,2.4vw,40px);align-items:center}
+.nav a{white-space:nowrap;font-weight:700;font-size:14px;line-height:24px;color:var(--bronze-d);padding:4px 0;border-bottom:2px solid transparent;transition:border-color .15s}
+.nav a[aria-current="true"]{border-bottom-color:var(--gold)}
+.drawer a[aria-current="true"]{background:var(--tile)}
 .header__right{display:flex;align-items:center;gap:8px;justify-self:end}
 .lang{
   height:38px;min-width:49px;padding:0 10px;border:0;border-radius:8px;
   background:var(--bronze-d);color:var(--cream);font-weight:700;font-size:14px;
   transition:background .15s;
 }
-[aria-disabled="true"]{cursor:default}
 .burger{display:none;width:44px;height:44px;border:0;background:transparent;border-radius:8px;position:relative}
 .burger span,.burger span::before,.burger span::after{display:block;width:22px;height:2px;background:var(--bronze-d);border-radius:2px;position:absolute;left:11px;transition:transform .2s,opacity .2s,top .2s}
 .burger span{top:21px}
@@ -267,7 +268,6 @@ h1,h2,h3{overflow-wrap:break-word}
   .showcase__play:hover{background:rgba(26,29,8,.4)}
   .footer ul a:hover,.contact a:hover,.legal a:hover{color:var(--white)}
   .langs button:hover{color:var(--white)}
-  .langs button[aria-disabled="true"]:hover{color:var(--muted-d)}
 }
 
 /* ============ Breakpoints ============ */
@@ -394,24 +394,26 @@ h1,h2,h3{overflow-wrap:break-word}
         <img src="data:image/png;base64,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" alt="AuSol" width="320" height="166" decoding="async">
       </a>
       <nav class="nav" aria-label="მთავარი ნავიგაცია">
-        <a href="#home">მთავარი</a>
-        <a href="#services">სერვისები</a>
-        <a href="#process">როგორ მუშაობს?</a>
-        <a href="#showcase">ვიდეო</a>
+        <a href="#home" data-i18n="t1">მთავარი</a>
+        <a href="#services" data-i18n="t2">სერვისები</a>
+        <a href="#process" data-i18n="t3">როგორ მუშაობს?</a>
+        <a href="#showcase" data-i18n="t4">ვიდეო</a>
+        <a href="#calculator" data-i18n="t5">კალკულატორი</a>
+        <a href="#partnership" data-i18n="t6">პარტნიორობა</a>
       </nav>
       <div class="header__right">
-        <button class="lang" type="button" data-lang-toggle aria-disabled="true" title="ინგლისური ვერსია მალე დაემატება" aria-label="English version — coming soon">ENG</button>
+        <button class="lang" type="button" data-lang-toggle aria-label="გადართვა ინგლისურ ენაზე">ENG</button>
         <button class="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="მენიუს გახსნა"><span></span></button>
       </div>
     </div>
   </div>
   <div class="drawer" id="drawer">
-    <a href="#home">მთავარი</a>
-    <a href="#services">სერვისები</a>
-    <a href="#process">როგორ მუშაობს?</a>
-    <a href="#showcase">ვიდეო</a>
-    <a href="#calculator">კალკულატორი</a>
-    <a href="#partnership">პარტნიორობა</a>
+    <a href="#home" data-i18n="t1">მთავარი</a>
+    <a href="#services" data-i18n="t2">სერვისები</a>
+    <a href="#process" data-i18n="t3">როგორ მუშაობს?</a>
+    <a href="#showcase" data-i18n="t4">ვიდეო</a>
+    <a href="#calculator" data-i18n="t5">კალკულატორი</a>
+    <a href="#partnership" data-i18n="t6">პარტნიორობა</a>
   </div>
 </header>
 
@@ -421,30 +423,30 @@ h1,h2,h3{overflow-wrap:break-word}
   <div class="wrap">
     <div class="hero__grid">
       <div class="hero__copy">
-        <h1 id="hero-title">ელექტრონულ ნარჩენს ვაქცევთ <em>ღირებულ რესურსად</em></h1>
-        <p>AuSol ქმნის უსაფრთხო, ეკოლოგიურ და სრულად გამჭვირვალე გზას ელექტრონული ნარჩენების შეგროვების, დახარისხებისა და სტრატეგიული ძვირფასი მეტალების აღდგენისთვის სამრეწველო მასშტაბით.</p>
+        <h1 id="hero-title"><span data-i18n="h1a">ელექტრონულ ნარჩენს ვაქცევთ</span> <em data-i18n="h1b">ღირებულ რესურსად</em></h1>
+        <p data-i18n="t9">AuSol ქმნის უსაფრთხო, ეკოლოგიურ და სრულად გამჭვირვალე გზას ელექტრონული ნარჩენების შეგროვების, დახარისხებისა და სტრატეგიული ძვირფასი მეტალების აღდგენისთვის სამრეწველო მასშტაბით.</p>
       </div>
 
       <!-- Calculator -->
       <section class="calc" id="calculator" aria-labelledby="calc-title">
         <div class="calc__head">
-          <div class="calc__eyebrow"><i></i>AUSOL ᲨᲔᲤᲐᲡᲔᲑᲐ</div>
-          <h2 class="calc__title" id="calc-title">სწრაფი ონლაინ კალკულატორი</h2>
+          <div class="calc__eyebrow"><i></i><span data-i18n="eyebrow">AUSOL ᲨᲔᲤᲐᲡᲔᲑᲐ</span></div>
+          <h2 class="calc__title" id="calc-title" data-i18n="t10">სწრაფი ონლაინ კალკულატორი</h2>
         </div>
 
         <div class="mode" role="radiogroup" aria-label="გამოთვლის ტიპი">
-          <label class="mode__opt"><input type="radio" name="mode" value="kg" checked><span>კილოგრამი</span></label>
-          <label class="mode__opt"><input type="radio" name="mode" value="qty"><span>რაოდენობა</span></label>
+          <label class="mode__opt"><input type="radio" name="mode" value="kg" checked><span data-i18n="t11">კილოგრამი</span></label>
+          <label class="mode__opt"><input type="radio" name="mode" value="qty"><span data-i18n="t12">რაოდენობა</span></label>
         </div>
 
         <fieldset class="devices-wrap" style="border:0;padding:0;margin:0;min-width:0">
-          <legend class="sr-only">აირჩიეთ ნარჩენი</legend>
-          <div class="calc__label" aria-hidden="true"><b>ᲐᲘᲠᲩᲘᲔᲗ ᲜᲐᲠᲩᲔᲜᲘ</b></div>
+          <legend class="sr-only" data-i18n="t13">აირჩიეთ ნარჩენი</legend>
+          <div class="calc__label" aria-hidden="true"><b data-i18n="t14">ᲐᲘᲠᲩᲘᲔᲗ ᲜᲐᲠᲩᲔᲜᲘ</b></div>
           <div class="devices" id="devices">
-            <label class="dev"><input type="radio" name="device" value="pc" checked><span class="dev__card"><svg class="ico"><use href="#i-pcset"/></svg><span class="dev__name">კომპიუტერი</span></span></label>
-            <label class="dev"><input type="radio" name="device" value="laptop"><span class="dev__card"><svg class="ico"><use href="#i-laptop"/></svg><span class="dev__name">ლეპტოპი</span></span></label>
-            <label class="dev"><input type="radio" name="device" value="server"><span class="dev__card"><svg class="ico"><use href="#i-server"/></svg><span class="dev__name">სერვერი</span></span></label>
-            <label class="dev"><input type="radio" name="device" value="phone"><span class="dev__card"><svg class="ico"><use href="#i-phone"/></svg><span class="dev__name">მობილური</span></span></label>
+            <label class="dev"><input type="radio" name="device" value="pc" checked><span class="dev__card"><svg class="ico"><use href="#i-pcset"/></svg><span class="dev__name" data-i18n="t15">კომპიუტერი</span></span></label>
+            <label class="dev"><input type="radio" name="device" value="laptop"><span class="dev__card"><svg class="ico"><use href="#i-laptop"/></svg><span class="dev__name" data-i18n="t16">ლეპტოპი</span></span></label>
+            <label class="dev"><input type="radio" name="device" value="server"><span class="dev__card"><svg class="ico"><use href="#i-server"/></svg><span class="dev__name" data-i18n="t17">სერვერი</span></span></label>
+            <label class="dev"><input type="radio" name="device" value="phone"><span class="dev__card"><svg class="ico"><use href="#i-phone"/></svg><span class="dev__name" data-i18n="t18">მობილური</span></span></label>
           </div>
         </fieldset>
 
@@ -462,11 +464,11 @@ h1,h2,h3{overflow-wrap:break-word}
         </div>
 
         <div class="result" aria-live="polite">
-          <div class="result__top"><span id="summary">სრული კომპიუტერული ბლოკი (ქეისი) • 15&nbsp;კგ</span><b>ᲬᲘᲜᲐᲡᲬᲐᲠᲘ ᲨᲔᲤᲐᲡᲔᲑᲐ</b></div>
-          <div class="result__bottom"><span>თქვენი წილი (50%):</span><span class="result__sum"><span id="total">+30 – +71.25</span><small>₾</small></span></div>
+          <div class="result__top"><span id="summary">სრული კომპიუტერული ბლოკი (ქეისი) • 15&nbsp;კგ</span><b data-i18n="t19">ᲬᲘᲜᲐᲡᲬᲐᲠᲘ ᲨᲔᲤᲐᲡᲔᲑᲐ</b></div>
+          <div class="result__bottom"><span data-i18n="t20">თქვენი წილი (50%):</span><span class="result__sum"><span id="total">+30 – +71.25</span><small>₾</small></span></div>
         </div>
 
-        <button class="cta" type="button" id="book">დაჯავშნე ადგილზე გატანა ან ჩაბარება <svg class="ico"><use href="#i-arrow"/></svg></button>
+        <button class="cta" type="button" id="book"><span data-i18n="cta">დაჯავშნე ადგილზე გატანა ან ჩაბარება</span> <svg class="ico"><use href="#i-arrow"/></svg></button>
       </section>
     </div>
   </div>
@@ -477,60 +479,60 @@ h1,h2,h3{overflow-wrap:break-word}
   <div class="wrap">
     <div class="sec-head">
       <div class="sec-head__text">
-        <h2 class="h2" id="services-title">ჩვენი სერვისები</h2>
-        <p class="lede">ტექნიკური სიზუსტე შეგროვებიდან მეტალურგიულ გადამუშავებამდე. სრული ციკლი ერთი კომპანიის ფარგლებში.</p>
+        <h2 class="h2" id="services-title" data-i18n="t21">ჩვენი სერვისები</h2>
+        <p class="lede" data-i18n="t22">ტექნიკური სიზუსტე შეგროვებიდან მეტალურგიულ გადამუშავებამდე. სრული ციკლი ერთი კომპანიის ფარგლებში.</p>
       </div>
-      <div class="tag"><svg class="ico"><use href="#i-badge"/></svg>100% ეკოლოგიური ლიცენზია</div>
+      <div class="tag"><svg class="ico"><use href="#i-badge"/></svg><span data-i18n="tag">100% ეკოლოგიური ლიცენზია</span></div>
     </div>
 
     <div class="services">
       <article class="card svc">
         <div class="tile"><svg width="27" height="27" aria-hidden="true"><use href="#i-s1"/></svg></div>
         <div class="svc__body">
-          <div class="svc__title"><h3>ელექტრონული ნარჩენების მიღება და შეგროვება</h3><span class="chip">S-01</span></div>
-          <p>ნებისმიერი კატეგორიის სამომხმარებლო და ინდუსტრიული ელექტრონიკის ცენტრალიზებული მიღება AuSol-ის ლოგისტიკურ ცენტრებში.</p>
+          <div class="svc__title"><h3 data-i18n="t23">ელექტრონული ნარჩენების მიღება და შეგროვება</h3><span class="chip">S-01</span></div>
+          <p data-i18n="t24">ნებისმიერი კატეგორიის სამომხმარებლო და ინდუსტრიული ელექტრონიკის ცენტრალიზებული მიღება AuSol-ის ლოგისტიკურ ცენტრებში.</p>
         </div>
       </article>
       <article class="card svc">
         <div class="tile"><svg width="24" height="26" aria-hidden="true"><use href="#i-s2"/></svg></div>
         <div class="svc__body">
-          <div class="svc__title"><h3>კომპიუტერებისა და სერვერების ჩაბარება</h3><span class="chip">S-02</span></div>
-          <p>დეაქტივირებული სერვერული კარადების, ქსელური კონცენტრატორებისა და სამუშაო სადგურების უსაფრთხო დემონტაჟი და ჩაბარება.</p>
+          <div class="svc__title"><h3 data-i18n="t25">კომპიუტერებისა და სერვერების ჩაბარება</h3><span class="chip">S-02</span></div>
+          <p data-i18n="t26">დეაქტივირებული სერვერული კარადების, ქსელური კონცენტრატორებისა და სამუშაო სადგურების უსაფრთხო დემონტაჟი და ჩაბარება.</p>
         </div>
       </article>
       <article class="card svc">
         <div class="tile"><svg width="24" height="25" aria-hidden="true"><use href="#i-s3"/></svg></div>
         <div class="svc__body">
-          <div class="svc__title"><h3>IT ტექნიკის კომპლექსური უტილიზაცია</h3><span class="chip">S-03</span></div>
-          <p>კომპლექსური გადამუშავება საერთაშორისო WEEE (Waste Electrical &amp; Electronic Equipment) დირექტივების სრული დაცვით.</p>
+          <div class="svc__title"><h3 data-i18n="t27">IT ტექნიკის კომპლექსური უტილიზაცია</h3><span class="chip">S-03</span></div>
+          <p data-i18n="t28">კომპლექსური გადამუშავება საერთაშორისო WEEE (Waste Electrical &amp; Electronic Equipment) დირექტივების სრული დაცვით.</p>
         </div>
       </article>
       <article class="card svc">
         <div class="tile"><svg width="21" height="27" aria-hidden="true"><use href="#i-s4"/></svg></div>
         <div class="svc__body">
-          <div class="svc__title"><h3>მონაცემთა მატარებლების უსაფრთხო განადგურება</h3><span class="chip">S-04</span></div>
-          <p>HDD, SSD და Flash მატარებლების ფიზიკური დეინსტალაცია და დაქუცმაცება (Shredding) მონაცემთა სრული აღუდგენლობის გარანტიით.</p>
+          <div class="svc__title"><h3 data-i18n="t29">მონაცემთა მატარებლების უსაფრთხო განადგურება</h3><span class="chip">S-04</span></div>
+          <p data-i18n="t30">HDD, SSD და Flash მატარებლების ფიზიკური დეინსტალაცია და დაქუცმაცება (Shredding) მონაცემთა სრული აღუდგენლობის გარანტიით.</p>
         </div>
       </article>
       <article class="card svc">
         <div class="tile"><svg width="29" height="21" aria-hidden="true"><use href="#i-s5"/></svg></div>
         <div class="svc__body">
-          <div class="svc__title"><h3>ადგილზე გატანა და ტრანსპორტირება</h3><span class="chip">S-05</span></div>
-          <p>საკუთარი სპეცტრანსპორტით ნარჩენების შეუფერხებელი ლოგისტიკა მთელი საქართველოს მასშტაბით პირდაპირ თქვენი ობიექტიდან.</p>
+          <div class="svc__title"><h3 data-i18n="t31">ადგილზე გატანა და ტრანსპორტირება</h3><span class="chip">S-05</span></div>
+          <p data-i18n="t32">საკუთარი სპეცტრანსპორტით ნარჩენების შეუფერხებელი ლოგისტიკა მთელი საქართველოს მასშტაბით პირდაპირ თქვენი ობიექტიდან.</p>
         </div>
       </article>
       <article class="card svc">
         <div class="tile"><svg width="27" height="24" aria-hidden="true"><use href="#i-s6"/></svg></div>
         <div class="svc__body">
-          <div class="svc__title"><h3>ძვირფასი რესურსების აღდგენა (Au, Cu, Ag)</h3><span class="chip">S-06</span></div>
-          <p>დაბეჭდილი მიკროსქემებიდან და პროცესორებიდან ოქროს, სპილენძის, პალადიუმისა და ვერცხლის მაღალი სისუფთავით სეპარაცია.</p>
+          <div class="svc__title"><h3 data-i18n="t33">ძვირფასი რესურსების აღდგენა (Au, Cu, Ag)</h3><span class="chip">S-06</span></div>
+          <p data-i18n="t34">დაბეჭდილი მიკროსქემებიდან და პროცესორებიდან ოქროს, სპილენძის, პალადიუმისა და ვერცხლის მაღალი სისუფთავით სეპარაცია.</p>
         </div>
       </article>
       <article class="card svc svc--wide">
         <div class="tile"><svg width="24" height="27" aria-hidden="true"><use href="#i-s7"/></svg></div>
         <div class="svc__body">
-          <div class="svc__title"><h3>ოფიციალური დოკუმენტაცია და ISO სერტიფიცირება</h3><span class="chip">COMPLIANCE</span></div>
-          <p>გადამუშავების ოფიციალური აქტები, გარემოსდაცვითი მოწმობები და საგადასახადო ჩამოწერის სრული პაკეტი, რომელიც აღიარებულია საქართველოს შემოსავლების სამსახურისა და გარემოსდაცვითი ზედამხედველობის მიერ.</p>
+          <div class="svc__title"><h3 data-i18n="t35">ოფიციალური დოკუმენტაცია და ISO სერტიფიცირება</h3><span class="chip">COMPLIANCE</span></div>
+          <p data-i18n="t36">გადამუშავების ოფიციალური აქტები, გარემოსდაცვითი მოწმობები და საგადასახადო ჩამოწერის სრული პაკეტი, რომელიც აღიარებულია საქართველოს შემოსავლების სამსახურისა და გარემოსდაცვითი ზედამხედველობის მიერ.</p>
         </div>
       </article>
     </div>
@@ -542,15 +544,15 @@ h1,h2,h3{overflow-wrap:break-word}
   <div class="wrap">
     <div class="sec-head">
       <div class="sec-head__text">
-        <h2 class="h2" id="process-title">როგორ მუშაობს AuSol</h2>
-        <p class="lede">4-ეტაპიანი გამჭვირვალე, უსაფრთხო და ლიცენზირებული ციკლი განაცხადის მიღებიდან სერტიფიკატის გაცემამდე.</p>
+        <h2 class="h2" id="process-title" data-i18n="t37">როგორ მუშაობს AuSol</h2>
+        <p class="lede" data-i18n="t38">4-ეტაპიანი გამჭვირვალე, უსაფრთხო და ლიცენზირებული ციკლი განაცხადის მიღებიდან სერტიფიკატის გაცემამდე.</p>
       </div>
     </div>
     <ol class="steps">
-      <li class="step"><div class="step__n">01</div><h3>დაგვიკავშირდი</h3><p>შეავსეთ მარტივი ონლაინ განაცხადი ან დაუკავშირდით პირად მენეჯერს ტექნიკის წინასწარი ჩამონათვალის წარსადგენად.</p></li>
-      <li class="step"><div class="step__n">02</div><h3>ვაფასებთ ნარჩენს</h3><p>ექსპერტთა ჯგუფი აფასებს ნარჩენის მოცულობას, კატეგორიას, ელემენტარულ შემადგენლობასა და საბაზრო ღირებულებას.</p></li>
-      <li class="step"><div class="step__n">03</div><h3>ვახარისხებთ და ვამუშავებთ</h3><p>მექანიკური და ეკოლოგიური დაშლა AuSol-ის საწარმოში. ძვირფასი მეტალების სეპარაცია და ნარჩენების უსაფრთხო დეაქტივაცია.</p></li>
-      <li class="step"><div class="step__n">04</div><h3>გაძლევთ დოკუმენტაციას</h3><p>გადაგეცემათ ოფიციალური უტილიზაციის აქტი, განადგურების ვიდეო-ოქმი (საჭიროების შემთხვევაში) და ფინანსური ანგარიშსწორება.</p></li>
+      <li class="step"><div class="step__n">01</div><h3 data-i18n="t39">დაგვიკავშირდი</h3><p data-i18n="t40">შეავსეთ მარტივი ონლაინ განაცხადი ან დაუკავშირდით პირად მენეჯერს ტექნიკის წინასწარი ჩამონათვალის წარსადგენად.</p></li>
+      <li class="step"><div class="step__n">02</div><h3 data-i18n="t41">ვაფასებთ ნარჩენს</h3><p data-i18n="t42">ექსპერტთა ჯგუფი აფასებს ნარჩენის მოცულობას, კატეგორიას, ელემენტარულ შემადგენლობასა და საბაზრო ღირებულებას.</p></li>
+      <li class="step"><div class="step__n">03</div><h3 data-i18n="t43">ვახარისხებთ და ვამუშავებთ</h3><p data-i18n="t44">მექანიკური და ეკოლოგიური დაშლა AuSol-ის საწარმოში. ძვირფასი მეტალების სეპარაცია და ნარჩენების უსაფრთხო დეაქტივაცია.</p></li>
+      <li class="step"><div class="step__n">04</div><h3 data-i18n="t45">გაძლევთ დოკუმენტაციას</h3><p data-i18n="t46">გადაგეცემათ ოფიციალური უტილიზაციის აქტი, განადგურების ვიდეო-ოქმი (საჭიროების შემთხვევაში) და ფინანსური ანგარიშსწორება.</p></li>
     </ol>
   </div>
 </section>
@@ -560,16 +562,16 @@ h1,h2,h3{overflow-wrap:break-word}
   <div class="wrap">
     <div class="sec-head">
       <div class="sec-head__text">
-        <h2 class="h2" id="showcase-title">პროცესი რეალურად</h2>
-        <p class="lede">მიღებიდან დეაქტივაციამდე და ოქროს ზოდამდე — ასე გამოიყურება AuSol-ის ციკლი ჩვენს საწარმოში.</p>
+        <h2 class="h2" id="showcase-title" data-i18n="t47">პროცესი რეალურად</h2>
+        <p class="lede" data-i18n="t48">მიღებიდან დეაქტივაციამდე და ოქროს ზოდამდე — ასე გამოიყურება AuSol-ის ციკლი ჩვენს საწარმოში.</p>
       </div>
     </div>
     <figure class="showcase__media" style="margin:0">
-      <video id="showcaseVideo" src="process-reel.mp4" poster="poster.jpg" playsinline preload="metadata" aria-label="AuSol-ის გადამუშავების პროცესი: მიღებიდან ოქროს ზოდამდე"></video>
-      <button class="showcase__play" id="showcasePlay" type="button" data-playing="false" aria-label="ვიდეოს დაკვრა"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></i><span>ვიდეოს დაკვრა</span></button>
+      <video id="showcaseVideo" src="ოქრო mp4.mp4#t=0.1" playsinline preload="metadata" aria-label="AuSol-ის გადამუშავების პროცესი: მიღებიდან ოქროს ზოდამდე"></video>
+      <button class="showcase__play" id="showcasePlay" type="button" data-playing="false" aria-label="ვიდეოს დაკვრა"><i><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></i><span data-i18n="t49">ვიდეოს დაკვრა</span></button>
     </figure>
     <div class="showcase__caption">
-      <p>ნარჩენების მიღება, აწონვა, ინდუსტრიული გადამუშავება და ძვირფასი მეტალის დნობა — სრული ციკლი ერთ ვიდეოში.</p>
+      <p data-i18n="t50">ნარჩენების მიღება, აწონვა, ინდუსტრიული გადამუშავება და ძვირფასი მეტალის დნობა — სრული ციკლი ერთ ვიდეოში.</p>
       <b>00:30</b>
     </div>
   </div>
@@ -580,17 +582,17 @@ h1,h2,h3{overflow-wrap:break-word}
   <div class="wrap">
     <div class="sec-head">
       <div class="sec-head__text">
-        <h2 class="h2" id="partner-title">გახდი AuSol-ის პარტნიორი</h2>
-        <p class="lede">ორგანიზაციებისთვის AuSol გთავაზობთ ელექტრონული ნარჩენების ორგანიზებულ მართვას, ადგილზე გატანასა და დოკუმენტირებულ უტილიზაციას.</p>
+        <h2 class="h2" id="partner-title" data-i18n="t51">გახდი AuSol-ის პარტნიორი</h2>
+        <p class="lede" data-i18n="t52">ორგანიზაციებისთვის AuSol გთავაზობთ ელექტრონული ნარჩენების ორგანიზებულ მართვას, ადგილზე გატანასა და დოკუმენტირებულ უტილიზაციას.</p>
       </div>
     </div>
     <div class="benefits">
-      <article class="card benefit"><div class="tile"><svg width="22" height="20" aria-hidden="true"><use href="#i-p1"/></svg></div><h3>მორგებული პირობები</h3><p>გრძელვადიანი ჩარჩო ხელშეკრულებები კორპორატიული ტარიფებით, მუდმივი მომსახურებისა და ინდივიდუალური გრაფიკების შეთავაზებით.</p></article>
-      <article class="card benefit"><div class="tile"><svg width="22" height="16" aria-hidden="true"><use href="#i-p2"/></svg></div><h3>სპეციალური ლოგისტიკა</h3><p>სპეცტექნიკით აღჭურვილი ლოგისტიკური ბრიგადა, რომელიც ახორციელებს მძიმე სერვერებისა და საოფისე ტექნიკის უსაფრთხო დემონტაჟსა და გატანას.</p></article>
-      <article class="card benefit"><div class="tile"><svg width="18" height="20" aria-hidden="true"><use href="#i-p3"/></svg></div><h3>ზუსტი ელექტრონული აღრიცხვა</h3><p>თითოეული პარტიის სრული დეტალიზაცია: სერიული ნომრები, წონითი მაჩვენებლები და გადამუშავების ციკლის სტატუსის მონიტორინგი.</p></article>
-      <article class="card benefit"><div class="tile"><svg width="17" height="17" aria-hidden="true"><use href="#i-p4"/></svg></div><h3>ეკოლოგიური სისუფთავე</h3><p>ნულოვანი ემისია გარემოში ტოქსიკური ნივთიერებების (ტყვია, ვერცხლისწყალი, კადმიუმი) სწორი ნეიტრალიზაციითა და უსაფრთხო დეპონირებით.</p></article>
-      <article class="card benefit"><div class="tile"><svg width="16" height="20" aria-hidden="true"><use href="#i-p5"/></svg></div><h3>ოფიციალური სერტიფიცირება</h3><p>საგადასახადო ბალანსიდან ჩამოწერის ოფიციალური დოკუმენტები, აუდიტისთვის მზა ეკოლოგიური პასპორტი და ISO 14001 შესაბამისობის აქტი.</p></article>
-      <article class="card benefit"><div class="tile"><svg width="16" height="20" aria-hidden="true"><use href="#i-p6"/></svg></div><h3>მონაცემთა დაცვის გარანტია</h3><p>კომერციული და სახელმწიფო საიდუმლოების შემცველი ინფორმაციის მატარებლების დეაქტივაცია საერთაშორისო NIST SP 800-88 სტანდარტით.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="22" height="20" aria-hidden="true"><use href="#i-p1"/></svg></div><h3 data-i18n="t53">მორგებული პირობები</h3><p data-i18n="t54">გრძელვადიანი ჩარჩო ხელშეკრულებები კორპორატიული ტარიფებით, მუდმივი მომსახურებისა და ინდივიდუალური გრაფიკების შეთავაზებით.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="22" height="16" aria-hidden="true"><use href="#i-p2"/></svg></div><h3 data-i18n="t55">სპეციალური ლოგისტიკა</h3><p data-i18n="t56">სპეცტექნიკით აღჭურვილი ლოგისტიკური ბრიგადა, რომელიც ახორციელებს მძიმე სერვერებისა და საოფისე ტექნიკის უსაფრთხო დემონტაჟსა და გატანას.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="18" height="20" aria-hidden="true"><use href="#i-p3"/></svg></div><h3 data-i18n="t57">ზუსტი ელექტრონული აღრიცხვა</h3><p data-i18n="t58">თითოეული პარტიის სრული დეტალიზაცია: სერიული ნომრები, წონითი მაჩვენებლები და გადამუშავების ციკლის სტატუსის მონიტორინგი.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="17" height="17" aria-hidden="true"><use href="#i-p4"/></svg></div><h3 data-i18n="t59">ეკოლოგიური სისუფთავე</h3><p data-i18n="t60">ნულოვანი ემისია გარემოში ტოქსიკური ნივთიერებების (ტყვია, ვერცხლისწყალი, კადმიუმი) სწორი ნეიტრალიზაციითა და უსაფრთხო დეპონირებით.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="16" height="20" aria-hidden="true"><use href="#i-p5"/></svg></div><h3 data-i18n="t61">ოფიციალური სერტიფიცირება</h3><p data-i18n="t62">საგადასახადო ბალანსიდან ჩამოწერის ოფიციალური დოკუმენტები, აუდიტისთვის მზა ეკოლოგიური პასპორტი და ISO 14001 შესაბამისობის აქტი.</p></article>
+      <article class="card benefit"><div class="tile"><svg width="16" height="20" aria-hidden="true"><use href="#i-p6"/></svg></div><h3 data-i18n="t63">მონაცემთა დაცვის გარანტია</h3><p data-i18n="t64">კომერციული და სახელმწიფო საიდუმლოების შემცველი ინფორმაციის მატარებლების დეაქტივაცია საერთაშორისო NIST SP 800-88 სტანდარტით.</p></article>
     </div>
   </div>
 </section>
@@ -602,36 +604,36 @@ h1,h2,h3{overflow-wrap:break-word}
     <div class="footer__grid">
       <div class="footer__brand">
         <img class="footer__logo" src="data:image/png;base64,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" alt="AuSol" width="320" height="166" decoding="async" loading="lazy">
-        <p>მოწინავე ელექტრონული ნარჩენების გადამუშავება და ძვირფასი მეტალების აღდგენა საქართველოში. ტექნოლოგიური სიზუსტე და ეკოლოგიური პასუხისმგებლობა სამრეწველო მასშტაბით.</p>
+        <p data-i18n="t65">მოწინავე ელექტრონული ნარჩენების გადამუშავება და ძვირფასი მეტალების აღდგენა საქართველოში. ტექნოლოგიური სიზუსტე და ეკოლოგიური პასუხისმგებლობა სამრეწველო მასშტაბით.</p>
       </div>
       <nav aria-label="ფუტერის ნავიგაცია">
         <ul>
-          <li><a href="#home">მთავარი</a></li>
-          <li><a href="#services">ჩვენ შესახებ</a></li>
-          <li><a href="#services">სერვისები</a></li>
-          <li><a href="#process">როგორ მუშაობს</a></li>
-          <li><a href="#calculator">კალკულატორი</a></li>
-          <li><a href="#partnership">პარტნიორობა</a></li>
+          <li><a href="#home" data-i18n="t1">მთავარი</a></li>
+          <li><a href="#services" data-i18n="t7">ჩვენ შესახებ</a></li>
+          <li><a href="#services" data-i18n="t2">სერვისები</a></li>
+          <li><a href="#process" data-i18n="t8">როგორ მუშაობს</a></li>
+          <li><a href="#calculator" data-i18n="t5">კალკულატორი</a></li>
+          <li><a href="#partnership" data-i18n="t6">პარტნიორობა</a></li>
         </ul>
       </nav>
       <div>
         <div class="contact">
-          <span>თბილისი, საქართველო</span>
+          <span data-i18n="t66">თბილისი, საქართველო</span>
           <a href="mailto:info@ausol.ge">info@ausol.ge</a>
           <a href="tel:+995322000000">+995 32 200 00 00</a>
-          <small>სამუშაო საათები: ორშ-პარ 09:00 - 18:00</small>
+          <small data-i18n="t67">სამუშაო საათები: ორშ-პარ 09:00 - 18:00</small>
         </div>
         <div class="langs" role="group" aria-label="ენა">
-          <button type="button" aria-current="true">ᲥᲐᲠᲗᲣᲚᲘ</button><i>/</i><button type="button" aria-disabled="true" title="ინგლისური ვერსია მალე დაემატება">ENGLISH</button>
+          <button type="button" data-lang="ka" aria-current="true">ᲥᲐᲠᲗᲣᲚᲘ</button><i>/</i><button type="button" data-lang="en" aria-current="false">ENGLISH</button>
         </div>
       </div>
     </div>
     <div class="legal">
-      <span>© 2025 AuSol. ყველა უფლება დაცულია.</span>
+      <span data-i18n="copy">© 2026 AuSol. ყველა უფლება დაცულია.</span>
       <nav aria-label="სამართლებრივი ბმულები">
-        <a href="#" data-soon title="გვერდი მალე დაემატება">კონფიდენციალურობის პოლიტიკა</a>
-        <a href="#" data-soon title="გვერდი მალე დაემატება">მომსახურების პირობები</a>
-        <a href="#" data-soon title="გვერდი მალე დაემატება">ეკოლოგიური სტანდარტები</a>
+        <a href="#" data-soon title="გვერდი მალე დაემატება" data-i18n="t68">კონფიდენციალურობის პოლიტიკა</a>
+        <a href="#" data-soon title="გვერდი მალე დაემატება" data-i18n="t69">მომსახურების პირობები</a>
+        <a href="#" data-soon title="გვერდი მალე დაემატება" data-i18n="t70">ეკოლოგიური სტანდარტები</a>
       </nav>
     </div>
   </div>
@@ -641,12 +643,164 @@ h1,h2,h3{overflow-wrap:break-word}
 (function(){
   "use strict";
 
+  /* ---------- Language packs ---------- */
+  // Georgian is the source language: its strings are read from the markup on load (data-i18n / ATTRS),
+  // English lives in EN below. Dynamic strings (calculator, booking e-mail, menu label) live in TXT.
+  var lang = "ka";
+  var EN = {
+    "t1": "Home",
+    "t2": "Services",
+    "t3": "How it works",
+    "t4": "Video",
+    "t5": "Calculator",
+    "t6": "Partnership",
+    "t7": "About us",
+    "t8": "How it works",
+    "t9": "AuSol builds a safe, environmentally responsible and fully transparent way to collect and sort electronic waste and to recover strategic precious metals at industrial scale.",
+    "t10": "Quick online calculator",
+    "t11": "Kilograms",
+    "t12": "Quantity",
+    "t13": "Choose waste type",
+    "t14": "CHOOSE WASTE",
+    "t15": "Computer",
+    "t16": "Laptop",
+    "t17": "Server",
+    "t18": "Mobile",
+    "t19": "PRELIMINARY ESTIMATE",
+    "t20": "Your share (50%):",
+    "t21": "Our services",
+    "t22": "Technical precision from collection to metallurgical processing. The full cycle within a single company.",
+    "t23": "E-waste intake and collection",
+    "t24": "Centralised intake of consumer and industrial electronics of any category at AuSol logistics centres.",
+    "t25": "Computer and server drop-off",
+    "t26": "Safe dismantling and hand-over of decommissioned server racks, network concentrators and workstations.",
+    "t27": "Comprehensive IT equipment disposal",
+    "t28": "Comprehensive processing in full compliance with the international WEEE (Waste Electrical &amp; Electronic Equipment) directives.",
+    "t29": "Secure destruction of data carriers",
+    "t30": "Physical removal and shredding of HDD, SSD and flash media, with a guarantee that data cannot be recovered.",
+    "t31": "On-site pick-up and transport",
+    "t32": "Uninterrupted logistics with our own specialised vehicles, across all of Georgia, directly from your premises.",
+    "t33": "Precious resource recovery (Au, Cu, Ag)",
+    "t34": "High-purity separation of gold, copper, palladium and silver from printed circuit boards and processors.",
+    "t35": "Official documentation and ISO certification",
+    "t36": "Official recycling certificates, environmental permits and a complete tax write-off package, recognised by the Georgian Revenue Service and environmental supervision authorities.",
+    "t37": "How AuSol works",
+    "t38": "A transparent, safe and licensed 4-step cycle, from receiving your request to issuing the certificate.",
+    "t39": "Get in touch",
+    "t40": "Fill in a simple online request or contact a personal manager to submit a preliminary list of your equipment.",
+    "t41": "We assess the waste",
+    "t42": "Our team of experts evaluates the volume, category, elemental composition and market value of the waste.",
+    "t43": "We sort and process",
+    "t44": "Mechanical and eco-friendly dismantling at the AuSol plant. Separation of precious metals and safe deactivation of residues.",
+    "t45": "We give you the paperwork",
+    "t46": "You receive an official disposal certificate, a video record of destruction (if required) and the financial settlement.",
+    "t47": "The process in action",
+    "t48": "From intake to deactivation and the gold bar — this is what the AuSol cycle looks like at our plant.",
+    "t49": "Play video",
+    "t50": "Waste intake, weighing, industrial processing and precious metal smelting — the full cycle in one video.",
+    "t51": "Become an AuSol partner",
+    "t52": "For organisations, AuSol offers organised e-waste management, on-site pick-up and documented disposal.",
+    "t53": "Tailored terms",
+    "t54": "Long-term framework agreements with corporate rates, regular service and individual schedules.",
+    "t55": "Specialised logistics",
+    "t56": "A logistics crew with specialised equipment that safely dismantles and removes heavy servers and office equipment.",
+    "t57": "Precise electronic records",
+    "t58": "Full detail for every batch: serial numbers, weights and monitoring of the processing status.",
+    "t59": "Environmental cleanliness",
+    "t60": "Zero emission of toxic substances (lead, mercury, cadmium) into the environment through correct neutralisation and safe disposal.",
+    "t61": "Official certification",
+    "t62": "Official documents for write-off from the tax balance, an audit-ready environmental passport and an ISO 14001 compliance certificate.",
+    "t63": "Data protection guarantee",
+    "t64": "Deactivation of media containing commercial and state secrets according to the international NIST SP 800-88 standard.",
+    "t65": "Advanced e-waste recycling and precious metal recovery in Georgia. Technological precision and environmental responsibility at industrial scale.",
+    "t66": "Tbilisi, Georgia",
+    "t67": "Working hours: Mon–Fri 09:00 – 18:00",
+    "t68": "Privacy policy",
+    "t69": "Terms of service",
+    "t70": "Environmental standards",
+    "h1a": "We turn electronic waste into",
+    "h1b": "a valuable resource",
+    "eyebrow": "AUSOL ESTIMATE",
+    "tag": "100% environmental licence",
+    "cta": "Book on-site pick-up or drop-off",
+    "copy": "© 2026 AuSol. All rights reserved.",
+    "a_logo": "AuSol — Home",
+    "a_nav": "Main navigation",
+    "a_mode": "Calculation type",
+    "a_video": "AuSol recycling process: from intake to gold bar",
+    "a_play": "Play video",
+    "a_footnav": "Footer navigation",
+    "a_lang": "Language",
+    "a_legal": "Legal links",
+    "a_soon": "Page coming soon"
+  };
+
+  // [selector, attribute, key in EN]
+  var ATTRS = [
+    [".logo", "aria-label", "a_logo"],
+    [".nav", "aria-label", "a_nav"],
+    [".mode", "aria-label", "a_mode"],
+    ["#showcaseVideo", "aria-label", "a_video"],
+    ["#showcasePlay", "aria-label", "a_play"],
+    [".footer__grid nav", "aria-label", "a_footnav"],
+    [".langs", "aria-label", "a_lang"],
+    [".legal nav", "aria-label", "a_legal"],
+    ["[data-soon]", "title", "a_soon"]
+  ];
+
+  var TXT = {
+    ka: {
+      docTitle: "AuSol — ელექტრონული ნარჩენების გადამუშავება",
+      docDesc: "AuSol ქმნის უსაფრთხო, ეკოლოგიურ და სრულად გამჭვირვალე გზას ელექტრონული ნარჩენების შეგროვების, დახარისხებისა და ძვირფასი მეტალების აღდგენისთვის.",
+      menuOpen: "მენიუს გახსნა", menuClose: "მენიუს დახურვა",
+      langBtn: "ENG", langBtnLabel: "გადართვა ინგლისურ ენაზე",
+      kg: "კგ", pcs: "ცალი",
+      kgLabel: "წონის რაოდენობა:", qtyLabel: "ტექნიკის რაოდენობა:",
+      kgPresets: "წონის სწრაფი არჩევანი", qtyPresets: "რაოდენობის სწრაფი არჩევანი",
+      dev: {
+        pc: "სრული კომპიუტერული ბლოკი (ქეისი)", laptop: "ლეპტოპები და პლანშეტები",
+        server: "სერვერული აღჭურვილობა", phone: "მობილურები / სმარტფონები"
+      },
+      mailSubject: "გატანის/ჩაბარების დაჯავშნა — ",
+      mailBody: function(cat, kg, amount, range){
+        return "გამარჯობა,\n\nმსურს ადგილზე გატანის ან ჩაბარების დაჯავშნა.\n\n" +
+               "კატეგორია: " + cat + "\n" +
+               (kg ? "წონა: " : "რაოდენობა: ") + amount + "\n" +
+               "ჩემი წინასწარი წილი (50%): " + range + " ₾\n\n" +
+               "სახელი:\nმისამართი:\nსასურველი დრო:\nტელეფონი:\n";
+      }
+    },
+    en: {
+      docTitle: "AuSol — Electronic Waste Recycling",
+      docDesc: "AuSol builds a safe, environmentally responsible and fully transparent way to collect and sort electronic waste and recover precious metals.",
+      menuOpen: "Open menu", menuClose: "Close menu",
+      langBtn: "ქარ", langBtnLabel: "Switch to Georgian",
+      kg: "kg", pcs: "pcs",
+      kgLabel: "Weight:", qtyLabel: "Number of devices:",
+      kgPresets: "Quick weight selection", qtyPresets: "Quick quantity selection",
+      dev: {
+        pc: "Full computer unit (case)", laptop: "Laptops & tablets",
+        server: "Server equipment", phone: "Mobile phones / smartphones"
+      },
+      mailSubject: "Pick-up / drop-off booking — ",
+      mailBody: function(cat, kg, amount, range){
+        return "Hello,\n\nI would like to book an on-site pick-up or a drop-off.\n\n" +
+               "Category: " + cat + "\n" +
+               (kg ? "Weight: " : "Quantity: ") + amount + "\n" +
+               "My preliminary share (50%): " + range + " GEL\n\n" +
+               "Name:\nAddress:\nPreferred time:\nPhone:\n";
+      }
+    }
+  };
+  function T(){ return TXT[lang]; }
+
   /* ---------- Mobile menu ---------- */
   var burger = document.querySelector(".burger");
   var drawer = document.getElementById("drawer");
+  var header = document.querySelector(".header");
   function setMenu(open){
     burger.setAttribute("aria-expanded", String(open));
-    burger.setAttribute("aria-label", open ? "მენიუს დახურვა" : "მენიუს გახსნა");
+    burger.setAttribute("aria-label", open ? T().menuClose : T().menuOpen);
     drawer.classList.toggle("is-open", open);
   }
   burger.addEventListener("click", function(){ setMenu(burger.getAttribute("aria-expanded") !== "true"); });
@@ -665,24 +819,73 @@ h1,h2,h3{overflow-wrap:break-word}
     else if (mq && mq.addListener) mq.addListener(onWide);
   } catch (e) {}
 
+  /* ---------- Section navigation ---------- */
+  // Every in-page link is handled here instead of relying on the browser's default hash jump:
+  // the offset is measured from the real (sticky) header height, the scroll is smooth, the
+  // address bar is updated, and it works the same inside previews/iframes where hash jumps are flaky.
+  function reducedMotion(){
+    try { return window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; }
+  }
+  function scrollToSection(id){
+    var target = document.getElementById(id);
+    if (!target) return false;
+    var top = id === "home" ? 0
+      : target.getBoundingClientRect().top + window.pageYOffset - header.offsetHeight - 8;
+    window.scrollTo({ top: Math.max(0, top), behavior: reducedMotion() ? "auto" : "smooth" });
+    if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+    try { target.focus({ preventScroll: true }); } catch (e) {}
+    return true;
+  }
+  document.addEventListener("click", function(e){
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || a.hasAttribute("data-soon")) return;
+    if (e.defaultPrevented || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var id = a.getAttribute("href").slice(1);
+    if (!id || !document.getElementById(id)) return;
+    e.preventDefault();
+    scrollToSection(id);
+    try { history.pushState(null, "", "#" + id); } catch (err) {}
+  });
+
+  // Highlight the link of the section currently under the header.
+  var spyIds = ["home", "services", "process", "showcase", "partnership"];
+  var navLinks = document.querySelectorAll('.nav a, .drawer a');
+  var spyQueued = false;
+  function spy(){
+    spyQueued = false;
+    var line = header.offsetHeight + 40, current = spyIds[0];
+    for (var i = 0; i < spyIds.length; i++){
+      var el = document.getElementById(spyIds[i]);
+      if (el && el.getBoundingClientRect().top <= line) current = spyIds[i];
+    }
+    if (window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 4) current = spyIds[spyIds.length - 1];
+    for (var j = 0; j < navLinks.length; j++){
+      if (navLinks[j].getAttribute("href") === "#" + current) navLinks[j].setAttribute("aria-current", "true");
+      else navLinks[j].removeAttribute("aria-current");
+    }
+  }
+  window.addEventListener("scroll", function(){
+    if (!spyQueued){ spyQueued = true; window.requestAnimationFrame(spy); }
+  }, { passive: true });
+  window.addEventListener("resize", spy);
+
   /* ---------- Calculator ---------- */
   // Your evaluation: the client's 50% share for ONE TONNE of each category (min–max, ₾),
   // and how many devices make up that tonne. Every result is proportional to these rows.
   // (Laptop, server and phone rows = 50% × (gold g/t × 330 ₾ − 7,000 ₾ operating cost);
   //  computers per your figure: 100 computers → 2,000–4,750 ₾.)
   var DEVICES = {
-    pc:     { label:"სრული კომპიუტერული ბლოკი (ქეისი)", perTonne:[2000, 4750],   unitsPerTonne:100  },
-    laptop: { label:"ლეპტოპები და პლანშეტები",          perTonne:[13000, 29500], unitsPerTonne:500  },
-    server: { label:"სერვერული აღჭურვილობა",            perTonne:[21250, 46000], unitsPerTonne:50   },
-    phone:  { label:"მობილურები / სმარტფონები",         perTonne:[46000, 79000], unitsPerTonne:5000 }
+    pc:     { key:"pc",     perTonne:[2000, 4750],   unitsPerTonne:100  },
+    laptop: { key:"laptop", perTonne:[13000, 29500], unitsPerTonne:500  },
+    server: { key:"server", perTonne:[21250, 46000], unitsPerTonne:50   },
+    phone:  { key:"phone",  perTonne:[46000, 79000], unitsPerTonne:5000 }
   };
+  function deviceLabel(device){ return T().dev[device.key]; }
 
   // The two calculator modes. Each one remembers the last value entered in it.
   var MODES = {
-    kg:  { label:"წონის რაოდენობა:",    unit:"კგ",   presets:[5, 15, 50, 100], decimals:2, inputmode:"decimal",
-           max:100000, value:"15", presetsLabel:"წონის სწრაფი არჩევანი" },
-    qty: { label:"ტექნიკის რაოდენობა:", unit:"ცალი", presets:[1, 10, 50, 100], decimals:0, inputmode:"numeric",
-           max:100000, value:"10", presetsLabel:"რაოდენობის სწრაფი არჩევანი" }
+    kg:  { presets:[5, 15, 50, 100], decimals:2, inputmode:"decimal", max:100000, value:"15" },
+    qty: { presets:[1, 10, 50, 100], decimals:0, inputmode:"numeric", max:100000, value:"10" }
   };
   var mode = "kg";
 
@@ -709,7 +912,7 @@ h1,h2,h3{overflow-wrap:break-word}
   function signed(n){
     var r = round(n, 2);
     if (r === 0) return "0";
-    return (r > 0 ? "+" : "\u2212") + fmt(Math.abs(r));
+    return (r > 0 ? "+" : "−") + fmt(Math.abs(r));
   }
 
   // Single source of truth: the same clamped, rounded number feeds the summary and the maths,
@@ -720,10 +923,10 @@ h1,h2,h3{overflow-wrap:break-word}
     if (n > m.max) n = m.max;
     return round(n, m.decimals);
   }
-  // Non-breaking spaces keep a number and its unit (and "≈ 20 კგ") together when the line wraps.
+  // Non-breaking spaces keep a number and its unit (and "≈ 20 kg") together when the line wraps.
   function describeAmount(device, amount){
-    if (mode === "kg") return fmt(amount) + "\u00a0კგ";
-    return fmt(amount) + "\u00a0ცალი (≈\u00a0" + fmt(round(tonnesOf(device, amount) * 1000, 2)) + "\u00a0კგ)";
+    if (mode === "kg") return fmt(amount) + " " + T().kg;
+    return fmt(amount) + " " + T().pcs + " (≈ " + fmt(round(tonnesOf(device, amount) * 1000, 2)) + " " + T().kg + ")";
   }
   function currentDevice(){
     var checked = document.querySelector('input[name="device"]:checked');
@@ -733,29 +936,33 @@ h1,h2,h3{overflow-wrap:break-word}
     var device = currentDevice();
     var amount = clampAmount(amountInput.value);
     var r = calculate(device, amount);
-    summary.textContent = device.label + " • " + describeAmount(device, amount);
+    summary.textContent = deviceLabel(device) + " • " + describeAmount(device, amount);
     total.textContent = amount === 0 ? "0" : signed(r.min) + " – " + signed(r.max);
     for (var i = 0; i < presets.length; i++){
       presets[i].setAttribute("aria-pressed", String(Number(presets[i].dataset.w) === amount));
+    }
+  }
+  // Labels, unit and presets for the active mode and language (does not touch the typed value).
+  function refreshModeUI(){
+    var m = MODES[mode], unit = mode === "kg" ? T().kg : T().pcs;
+    amountLabel.textContent = mode === "kg" ? T().kgLabel : T().qtyLabel;
+    amountUnit.textContent = unit;
+    amountInput.setAttribute("inputmode", m.inputmode);
+    amountInput.setAttribute("step", m.decimals ? "any" : "1");
+    amountInput.setAttribute("max", String(m.max));
+    presetGroup.setAttribute("aria-label", mode === "kg" ? T().kgPresets : T().qtyPresets);
+    for (var i = 0; i < presets.length; i++){
+      var v = m.presets[i];
+      presets[i].dataset.w = String(v);
+      presets[i].textContent = (i === presets.length - 1 ? v + "+" : String(v)) + " " + unit;
     }
   }
   function applyMode(next){
     if (next === mode || !MODES[next]) return;
     MODES[mode].value = amountInput.value;          // keep where this mode was left
     mode = next;
-    var m = MODES[mode];
-    amountLabel.textContent = m.label;
-    amountUnit.textContent = m.unit;
-    amountInput.setAttribute("inputmode", m.inputmode);
-    amountInput.setAttribute("step", m.decimals ? "any" : "1");
-    amountInput.setAttribute("max", String(m.max));
-    presetGroup.setAttribute("aria-label", m.presetsLabel);
-    for (var i = 0; i < presets.length; i++){
-      var v = m.presets[i];
-      presets[i].dataset.w = String(v);
-      presets[i].textContent = (i === presets.length - 1 ? v + "+" : String(v)) + " " + m.unit;
-    }
-    amountInput.value = m.value;
+    refreshModeUI();
+    amountInput.value = MODES[mode].value;
     render();
   }
 
@@ -779,21 +986,73 @@ h1,h2,h3{overflow-wrap:break-word}
       render();
     });
   }
-  render();
 
   /* ---------- Booking ---------- */
   document.getElementById("book").addEventListener("click", function(){
     var device = currentDevice(), amount = clampAmount(amountInput.value);
     var r = calculate(device, amount);
-    var subject = "გატანის/ჩაბარების დაჯავშნა — " + device.label;
-    var body = "გამარჯობა,\n\nმსურს ადგილზე გატანის ან ჩაბარების დაჯავშნა.\n\n" +
-               "კატეგორია: " + device.label + "\n" +
-               (mode === "kg" ? "წონა: " : "რაოდენობა: ") + describeAmount(device, amount) + "\n" +
-               "ჩემი წინასწარი წილი (50%): " + signed(r.min) + " – " + signed(r.max) + " ₾\n\n" +
-               "სახელი:\nმისამართი:\nსასურველი დრო:\nტელეფონი:\n";
-    window.location.href = "mailto:info@ausol.ge?subject=" + encodeURIComponent(subject) +
+    var body = T().mailBody(deviceLabel(device), mode === "kg", describeAmount(device, amount),
+                            signed(r.min) + " – " + signed(r.max));
+    window.location.href = "mailto:info@ausol.ge?subject=" + encodeURIComponent(T().mailSubject + deviceLabel(device)) +
                            "&body=" + encodeURIComponent(body);
   });
+
+  /* ---------- Language switch ---------- */
+  var textEls = document.querySelectorAll("[data-i18n]");
+  var KA = {};
+  for (var k = 0; k < textEls.length; k++) KA[textEls[k].getAttribute("data-i18n")] = textEls[k].textContent;
+  var attrEls = [];
+  for (var s = 0; s < ATTRS.length; s++){
+    var found = document.querySelectorAll(ATTRS[s][0]);
+    for (var f = 0; f < found.length; f++){
+      var orig = found[f].getAttribute(ATTRS[s][1]);
+      if (orig !== null) attrEls.push({ el: found[f], attr: ATTRS[s][1], key: ATTRS[s][2], ka: orig });
+    }
+  }
+  var metaDesc = document.querySelector('meta[name="description"]');
+  var langToggle = document.querySelector("[data-lang-toggle]");
+  var langButtons = document.querySelectorAll(".langs button[data-lang]");
+
+  function setLang(next, persist){
+    if (next !== "ka" && next !== "en") return;
+    lang = next;
+    var pack = lang === "en" ? EN : KA;
+    document.documentElement.lang = lang === "en" ? "en" : "ka";
+    document.title = T().docTitle;
+    if (metaDesc) metaDesc.setAttribute("content", T().docDesc);
+    for (var a = 0; a < textEls.length; a++){
+      var key = textEls[a].getAttribute("data-i18n");
+      if (pack[key] !== undefined) textEls[a].textContent = pack[key];
+    }
+    for (var b = 0; b < attrEls.length; b++){
+      var item = attrEls[b];
+      item.el.setAttribute(item.attr, lang === "en" ? EN[item.key] : item.ka);
+    }
+    if (langToggle){
+      langToggle.textContent = T().langBtn;
+      langToggle.setAttribute("aria-label", T().langBtnLabel);
+    }
+    for (var c = 0; c < langButtons.length; c++){
+      langButtons[c].setAttribute("aria-current", String(langButtons[c].getAttribute("data-lang") === lang));
+    }
+    setMenu(burger.getAttribute("aria-expanded") === "true");
+    refreshModeUI();
+    render();
+    if (persist){ try { localStorage.setItem("ausol-lang", lang); } catch (e) {} }
+  }
+
+  if (langToggle) langToggle.addEventListener("click", function(){ setLang(lang === "ka" ? "en" : "ka", true); });
+  for (var d = 0; d < langButtons.length; d++){
+    langButtons[d].addEventListener("click", function(){ setLang(this.getAttribute("data-lang"), true); });
+  }
+
+  // Initial language: ?lang=en, then the saved choice, otherwise Georgian.
+  var initial = "ka";
+  try {
+    var q = /[?&]lang=(ka|en)\b/.exec(window.location.search);
+    initial = q ? q[1] : (localStorage.getItem("ausol-lang") || "ka");
+  } catch (e) {}
+  setLang(initial === "en" ? "en" : "ka", false);
 
   /* ---------- Showcase video ---------- */
   var showcaseVideo = document.getElementById("showcaseVideo");
@@ -816,9 +1075,15 @@ h1,h2,h3{overflow-wrap:break-word}
   /* ---------- Not-yet-available controls ---------- */
   // These have no destination yet; swallow the click so href="#" cannot jump the page to the top.
   document.addEventListener("click", function(e){
-    var el = e.target.closest('[data-soon], [aria-disabled="true"]');
+    var el = e.target.closest('[data-soon]');
     if (el) e.preventDefault();
   });
+
+  spy();
+  // Opened with a #section in the URL: land on it with the correct header offset.
+  if (window.location.hash.length > 1){
+    window.addEventListener("load", function(){ scrollToSection(decodeURIComponent(window.location.hash.slice(1))); });
+  }
 })();
 </script>
 </body>
