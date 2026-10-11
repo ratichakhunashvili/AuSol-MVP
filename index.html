@@ -160,7 +160,6 @@ h1,h2,h3{overflow-wrap:break-word}
 .result__bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 8px;padding:8px 12px;min-height:44px;background:var(--white)}
 .result__bottom > span:first-child{font-size:11px;color:var(--body)}
 .result__sum{font:700 clamp(15px,3.6vw,19px)/26px "Noto Sans","Noto Sans Georgian",sans-serif;color:var(--olive-ink);letter-spacing:-.01em;margin-left:auto;text-align:right}
-.result__sum small{font-size:14px;color:var(--gold-text);margin-left:2px}
 
 .cta{
   display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:44px;padding:10px 12px;
@@ -465,7 +464,7 @@ h1,h2,h3{overflow-wrap:break-word}
 
         <div class="result" aria-live="polite">
           <div class="result__top"><span id="summary">სრული კომპიუტერული ბლოკი (ქეისი) • 15&nbsp;კგ</span><b data-i18n="t19">ᲬᲘᲜᲐᲡᲬᲐᲠᲘ ᲨᲔᲤᲐᲡᲔᲑᲐ</b></div>
-          <div class="result__bottom"><span data-i18n="t20">თქვენი წილი (50%):</span><span class="result__sum"><span id="total">+30 – +71.25</span><small>₾</small></span></div>
+          <div class="result__bottom"><span data-i18n="t20">თქვენი წილი (50%):</span><span class="result__sum"><span id="total">+30 ₾-დან +71.25 ₾-მდე</span></span></div>
         </div>
 
         <button class="cta" type="button" id="book"><span data-i18n="cta">დაჯავშნე ადგილზე გატანა ან ჩაბარება</span> <svg class="ico"><use href="#i-arrow"/></svg></button>
@@ -766,7 +765,7 @@ h1,h2,h3{overflow-wrap:break-word}
         return "გამარჯობა,\n\nმსურს ადგილზე გატანის ან ჩაბარების დაჯავშნა.\n\n" +
                "კატეგორია: " + cat + "\n" +
                (kg ? "წონა: " : "რაოდენობა: ") + amount + "\n" +
-               "ჩემი წინასწარი წილი (50%): " + range + " ₾\n\n" +
+               "ჩემი წინასწარი წილი (50%): " + range + "\n\n" +
                "სახელი:\nმისამართი:\nსასურველი დრო:\nტელეფონი:\n";
       }
     },
@@ -787,7 +786,7 @@ h1,h2,h3{overflow-wrap:break-word}
         return "Hello,\n\nI would like to book an on-site pick-up or a drop-off.\n\n" +
                "Category: " + cat + "\n" +
                (kg ? "Weight: " : "Quantity: ") + amount + "\n" +
-               "My preliminary share (50%): " + range + " GEL\n\n" +
+               "My preliminary share (50%): " + range + "\n\n" +
                "Name:\nAddress:\nPreferred time:\nPhone:\n";
       }
     }
@@ -914,6 +913,11 @@ h1,h2,h3{overflow-wrap:break-word}
     if (r === 0) return "0";
     return (r > 0 ? "+" : "−") + fmt(Math.abs(r));
   }
+  function describeRange(min, max){
+    return lang === "ka"
+      ? signed(min) + " ₾-დან " + signed(max) + " ₾-მდე"
+      : "from GEL " + signed(min) + " to GEL " + signed(max);
+  }
 
   // Single source of truth: the same clamped, rounded number feeds the summary and the maths,
   // so the line the user reads always reconciles with the figure shown.
@@ -937,7 +941,7 @@ h1,h2,h3{overflow-wrap:break-word}
     var amount = clampAmount(amountInput.value);
     var r = calculate(device, amount);
     summary.textContent = deviceLabel(device) + " • " + describeAmount(device, amount);
-    total.textContent = amount === 0 ? "0" : signed(r.min) + " – " + signed(r.max);
+    total.textContent = describeRange(r.min, r.max);
     for (var i = 0; i < presets.length; i++){
       presets[i].setAttribute("aria-pressed", String(Number(presets[i].dataset.w) === amount));
     }
@@ -992,7 +996,7 @@ h1,h2,h3{overflow-wrap:break-word}
     var device = currentDevice(), amount = clampAmount(amountInput.value);
     var r = calculate(device, amount);
     var body = T().mailBody(deviceLabel(device), mode === "kg", describeAmount(device, amount),
-                            signed(r.min) + " – " + signed(r.max));
+                            describeRange(r.min, r.max));
     window.location.href = "mailto:info@ausol.ge?subject=" + encodeURIComponent(T().mailSubject + deviceLabel(device)) +
                            "&body=" + encodeURIComponent(body);
   });
