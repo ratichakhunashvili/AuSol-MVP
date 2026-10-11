@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- AuSol site v5 (2026-10-11): calculator runs from per-tonne evaluation; 100 computers = 2,000-4,750 GEL -->
 <html lang="ka">
 <head>
 <meta charset="utf-8">
@@ -462,7 +463,7 @@ h1,h2,h3{overflow-wrap:break-word}
 
         <div class="result" aria-live="polite">
           <div class="result__top"><span id="summary">სრული კომპიუტერული ბლოკი (ქეისი) • 15&nbsp;კგ</span><b>ᲬᲘᲜᲐᲡᲬᲐᲠᲘ ᲨᲔᲤᲐᲡᲔᲑᲐ</b></div>
-          <div class="result__bottom"><span>თქვენი წილი (50%):</span><span class="result__sum"><span id="total">−3 – +71.25</span><small>₾</small></span></div>
+          <div class="result__bottom"><span>თქვენი წილი (50%):</span><span class="result__sum"><span id="total">+30 – +71.25</span><small>₾</small></span></div>
         </div>
 
         <button class="cta" type="button" id="book">დაჯავშნე ადგილზე გატანა ან ჩაბარება <svg class="ico"><use href="#i-arrow"/></svg></button>
@@ -665,19 +666,16 @@ h1,h2,h3{overflow-wrap:break-word}
   } catch (e) {}
 
   /* ---------- Calculator ---------- */
-  // Sources: "IT Recycling 50/50 Client Profit Model" (per kg) and
-  // "IT Recycling 50/50 Units Model" (per unit).
-  // goldMin/goldMax: recovered gold per tonne, in grams.
-  // kgPerUnit: average weight of one device (the units sheet: 200 / 500 / 50 / 5,000 per tonne).
+  // Your evaluation: the client's 50% share for ONE TONNE of each category (min–max, ₾),
+  // and how many devices make up that tonne. Every result is proportional to these rows.
+  // (Laptop, server and phone rows = 50% × (gold g/t × 330 ₾ − 7,000 ₾ operating cost);
+  //  computers per your figure: 100 computers → 2,000–4,750 ₾.)
   var DEVICES = {
-    pc:     { label:"სრული კომპიუტერული ბლოკი (ქეისი)", goldMin:20,  goldMax:50,  kgPerUnit:5   },
-    laptop: { label:"ლეპტოპები და პლანშეტები",          goldMin:100, goldMax:200, kgPerUnit:2   },
-    server: { label:"სერვერული აღჭურვილობა",            goldMin:150, goldMax:300, kgPerUnit:20  },
-    phone:  { label:"მობილურები / სმარტფონები",         goldMin:300, goldMax:500, kgPerUnit:0.2 }
+    pc:     { label:"სრული კომპიუტერული ბლოკი (ქეისი)", perTonne:[2000, 4750],   unitsPerTonne:100  },
+    laptop: { label:"ლეპტოპები და პლანშეტები",          perTonne:[13000, 29500], unitsPerTonne:500  },
+    server: { label:"სერვერული აღჭურვილობა",            perTonne:[21250, 46000], unitsPerTonne:50   },
+    phone:  { label:"მობილურები / სმარტფონები",         perTonne:[46000, 79000], unitsPerTonne:5000 }
   };
-  var GOLD_PRICE   = 330;   // ₾ per gram of gold
-  var OPEX_PER_KG  = 7;     // ₾ per kg operating cost (7,000 ₾ per tonne), same for every category
-  var CLIENT_SHARE = 0.5;   // client keeps 50% of the net profit
 
   // The two calculator modes. Each one remembers the last value entered in it.
   var MODES = {
@@ -688,20 +686,13 @@ h1,h2,h3{overflow-wrap:break-word}
   };
   var mode = "kg";
 
-  /* Client's share = 50% × (recovered gold value − operating cost), for a given weight.
-     Low end uses the lowest gold yield, high end the highest. */
-  function calculate(device, weightKg){
-    var share = function(gramsPerTonne){
-      var goldValue = gramsPerTonne / 1000 * weightKg * GOLD_PRICE;
-      var opex = OPEX_PER_KG * weightKg;
-      return CLIENT_SHARE * (goldValue - opex);
-    };
-    return { min: share(device.goldMin), max: share(device.goldMax) };
+  // How many tonnes the entered amount represents: kilograms ÷ 1,000, or devices ÷ devices per tonne.
+  function tonnesOf(device, amount){
+    return mode === "qty" ? amount / device.unitsPerTonne : amount / 1000;
   }
-  // Quantity mode is the same model per device: n units weigh n × kgPerUnit,
-  // so 200 PCs, 500 laptops, 50 servers or 5,000 phones each come to exactly one tonne.
-  function toKg(device, amount){
-    return mode === "qty" ? amount * device.kgPerUnit : amount;
+  function calculate(device, amount){
+    var t = tonnesOf(device, amount);
+    return { min: device.perTonne[0] * t, max: device.perTonne[1] * t };
   }
 
   var amountInput = document.getElementById("weight");
@@ -732,7 +723,7 @@ h1,h2,h3{overflow-wrap:break-word}
   // Non-breaking spaces keep a number and its unit (and "≈ 20 კგ") together when the line wraps.
   function describeAmount(device, amount){
     if (mode === "kg") return fmt(amount) + "\u00a0კგ";
-    return fmt(amount) + "\u00a0ცალი (≈\u00a0" + fmt(round(toKg(device, amount), 2)) + "\u00a0კგ)";
+    return fmt(amount) + "\u00a0ცალი (≈\u00a0" + fmt(round(tonnesOf(device, amount) * 1000, 2)) + "\u00a0კგ)";
   }
   function currentDevice(){
     var checked = document.querySelector('input[name="device"]:checked');
@@ -741,7 +732,7 @@ h1,h2,h3{overflow-wrap:break-word}
   function render(){
     var device = currentDevice();
     var amount = clampAmount(amountInput.value);
-    var r = calculate(device, toKg(device, amount));
+    var r = calculate(device, amount);
     summary.textContent = device.label + " • " + describeAmount(device, amount);
     total.textContent = amount === 0 ? "0" : signed(r.min) + " – " + signed(r.max);
     for (var i = 0; i < presets.length; i++){
@@ -793,7 +784,7 @@ h1,h2,h3{overflow-wrap:break-word}
   /* ---------- Booking ---------- */
   document.getElementById("book").addEventListener("click", function(){
     var device = currentDevice(), amount = clampAmount(amountInput.value);
-    var r = calculate(device, toKg(device, amount));
+    var r = calculate(device, amount);
     var subject = "გატანის/ჩაბარების დაჯავშნა — " + device.label;
     var body = "გამარჯობა,\n\nმსურს ადგილზე გატანის ან ჩაბარების დაჯავშნა.\n\n" +
                "კატეგორია: " + device.label + "\n" +
